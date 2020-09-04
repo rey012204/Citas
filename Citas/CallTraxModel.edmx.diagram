@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="d23fdfd3788c439d929d1dedffe8d633" Name="Diagram1">
+        <EntityTypeShape EntityType="CallTraxModel.Appointment" Width="1.5" PointX="5.25" PointY="18.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="CallTraxModel.Call" Width="1.5" PointX="10.25" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="CallTraxModel.CallAction" Width="1.5" PointX="12.5" PointY="23.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CallTraxModel.CallDirection" Width="1.5" PointX="8" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CallTraxModel.CallFlow" Width="1.5" PointX="3" PointY="14.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CallTraxModel.CallFlowStep" Width="1.5" PointX="5.25" PointY="13.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="CallTraxModel.CallFlowStepDial" Width="1.5" PointX="7.5" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CallTraxModel.CallFlowStepGather" Width="1.5" PointX="7.5" PointY="14.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="CallTraxModel.CallFlowStepGatherRetry" Width="1.5" PointX="9.75" PointY="14.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CallTraxModel.CallFlowStepOption" Width="1.5" PointX="9.75" PointY="11.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="CallTraxModel.CallFlowStepSay" Width="1.5" PointX="7.5" PointY="23.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CallTraxModel.CallFlowStepType" Width="1.5" PointX="3" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CallTraxModel.CallFromPhoneAddress" Width="1.5" PointX="12.5" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CallTraxModel.CallGather" Width="1.5" PointX="12.5" PointY="10.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CallTraxModel.CallGatherAttempt" Width="1.5" PointX="10.75" PointY="17.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="CallTraxModel.CallPhoneAddress" Width="1.5" PointX="0.75" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="CallTraxModel.CallSurvey" Width="1.5" PointX="3" PointY="17.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="CallTraxModel.CallSurveyAnswer" Width="1.5" PointX="15" PointY="13.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="CallTraxModel.CallSurveyQuestion" Width="1.5" PointX="12.75" PointY="13.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CallTraxModel.CallToPhoneAddress" Width="1.5" PointX="12.5" PointY="2" IsExpanded="true" />
+        <EntityTypeShape EntityType="CallTraxModel.Client" Width="1.5" PointX="0.75" PointY="18.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="CallTraxModel.ClientLocation" Width="1.5" PointX="3" PointY="20.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="CallTraxModel.ClientUser" Width="1.5" PointX="3" PointY="23" IsExpanded="true" />
+        <EntityTypeShape EntityType="CallTraxModel.Consultant" Width="1.5" PointX="3" PointY="8.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="CallTraxModel.ConsultantSchedule" Width="1.5" PointX="8.25" PointY="19.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="CallTraxModel.Customer" Width="1.5" PointX="3" PointY="26.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CallTraxModel.ServiceCategory" Width="1.5" PointX="3" PointY="29.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="CallTraxModel.SessionTime" Width="1.5" PointX="10.25" PointY="23.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="CallTraxModel.SurveyQuestionType" Width="1.5" PointX="10.5" PointY="21" IsExpanded="true" />
+        <EntityTypeShape EntityType="CallTraxModel.sysdiagram" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CallTraxModel.Tollfree" Width="1.5" PointX="5.25" PointY="22.875" IsExpanded="true" />
+        <AssociationConnector Association="CallTraxModel.FK_Appointment_ClientLocation" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_Appointment_Consultant" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_Appointment_Customer" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_Appointment_ServiceCategory" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_Call_CallDirection" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_CallAction_Call" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_CallFromPhoneAddress_Call" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_CallGather_Call" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_CallGatherAttempt_Call" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_CallSurveyAnswer_Call" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_CallToPhoneAddress_Call" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_CallFlow_Client" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_CallFlowStep_CallFlow" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_Tollfree_CallFlow" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_CallFlowStep_CallFlowStepType" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_CallFlowStepDial_CallFlowStep" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_CallFlowStepGather_CallFlowStep" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_CallFlowStepGatherRetry_CallFlowStep" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_CallFlowStepOption_CallFlowStep" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_CallFlowStepSay_CallFlowStep" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_CallGather_CallFlowStep" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_CallFlowStepGatherRetry_CallFlowStepGather" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_CallFlowStepOption_CallFlowStepGather" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_CallGatherAttempt_CallFlowStepGather" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_CallSurveyQuestion_CallFlowStepGather" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_CallFromPhoneAddress_CallPhoneAddress" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_CallToPhoneAddress_CallPhoneAddress" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_CallSurvey_Client" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_CallSurveyQuestion_CallSurvey" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_CallSurveyAnswer_CallSurveyQuestion" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_CallSurveyQuestion_SurveyQuestionType" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_ClientLocation_Client" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_ClientUser_Client" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_ConsultantSchedule_ClientLocation" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_ConsultantSchedule_Consultant" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_SessionTime_Consultant" ManuallyRouted="false" />
+        <AssociationConnector Association="CallTraxModel.FK_SessionTime_ServiceCategory" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

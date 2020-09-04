@@ -1,0 +1,2231 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="CallTraxModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Appointment">
+          <Key>
+            <PropertyRef Name="AppointmentId" />
+          </Key>
+          <Property Name="AppointmentId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StartDateTime" Type="datetime" Nullable="false" />
+          <Property Name="EndDateTime" Type="datetime" Nullable="false" />
+          <Property Name="CustomerId" Type="bigint" Nullable="false" />
+          <Property Name="ServiceCategoryId" Type="smallint" Nullable="false" />
+          <Property Name="LocationId" Type="bigint" Nullable="false" />
+          <Property Name="ConsultantId" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Call">
+          <Key>
+            <PropertyRef Name="CallSid" />
+          </Key>
+          <Property Name="CallSid" Type="nchar" MaxLength="34" Nullable="false" />
+          <Property Name="DateTimeReceived" Type="datetime" Nullable="false" />
+          <Property Name="CallFlowId" Type="bigint" Nullable="false" />
+          <Property Name="AccountSid" Type="nchar" MaxLength="34" Nullable="false" />
+          <Property Name="FromPhoneNumber" Type="nchar" MaxLength="20" Nullable="false" />
+          <Property Name="ToPhoneNUmber" Type="nchar" MaxLength="20" Nullable="false" />
+          <Property Name="CallStatus" Type="smallint" Nullable="false" />
+          <Property Name="Direction" Type="smallint" Nullable="false" />
+          <Property Name="ApiVersion" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="ForwardedFrom" Type="nchar" MaxLength="20" />
+          <Property Name="CallerName" Type="nchar" MaxLength="50" />
+          <Property Name="ParentCallSid" Type="nchar" MaxLength="34" />
+        </EntityType>
+        <EntityType Name="CallAction">
+          <Key>
+            <PropertyRef Name="CallActionId" />
+          </Key>
+          <Property Name="CallActionId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ActionDateTime" Type="date" Nullable="false" />
+          <Property Name="CallSid" Type="nchar" MaxLength="34" Nullable="false" />
+          <Property Name="ActionDescription" Type="nchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CallDirection">
+          <Key>
+            <PropertyRef Name="CallDirectionId" />
+          </Key>
+          <Property Name="CallDirectionId" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CallDirectionName" Type="nchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CallFlow">
+          <Key>
+            <PropertyRef Name="CallFlowId" />
+          </Key>
+          <Property Name="CallFlowId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientId" Type="bigint" Nullable="false" />
+          <Property Name="FlowName" Type="nchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CallFlowStep">
+          <Key>
+            <PropertyRef Name="CallFlowStepId" />
+          </Key>
+          <Property Name="CallFlowStepId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CallFlowId" Type="bigint" Nullable="false" />
+          <Property Name="CallFlowStepType" Type="smallint" Nullable="false" />
+          <Property Name="IsWelcomeStep" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CallFlowStepDial">
+          <Key>
+            <PropertyRef Name="CallFlowStepId" />
+          </Key>
+          <Property Name="CallFlowStepId" Type="bigint" Nullable="false" />
+          <Property Name="DialPhoneNumber" Type="nchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CallFlowStepGather">
+          <Key>
+            <PropertyRef Name="CallFlowStepId" />
+          </Key>
+          <Property Name="CallFlowStepId" Type="bigint" Nullable="false" />
+          <Property Name="GatherName" Type="nchar" MaxLength="100" Nullable="false" />
+          <Property Name="Attempts" Type="smallint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CallFlowStepGatherRetry">
+          <Key>
+            <PropertyRef Name="CallFlowStepId" />
+          </Key>
+          <Property Name="CallFlowStepId" Type="bigint" Nullable="false" />
+          <Property Name="RetrySay" Type="nchar" MaxLength="100" />
+          <Property Name="FailCallFlowStepId" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CallFlowStepOption">
+          <Key>
+            <PropertyRef Name="CallFlowStepOptionId" />
+          </Key>
+          <Property Name="CallFlowStepOptionId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CallFlowStepId" Type="bigint" Nullable="false" />
+          <Property Name="OptionDescription" Type="nchar" MaxLength="100" Nullable="false" />
+          <Property Name="OptionValue" Type="nchar" MaxLength="20" Nullable="false" />
+          <Property Name="NextCallFlowStepId" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CallFlowStepSay">
+          <Key>
+            <PropertyRef Name="CallFlowStepId" />
+          </Key>
+          <Property Name="CallFlowStepId" Type="bigint" Nullable="false" />
+          <Property Name="SayText" Type="nchar" MaxLength="1000" Nullable="false" />
+          <Property Name="Language" Type="nchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CallFlowStepType">
+          <Key>
+            <PropertyRef Name="CallFlowStepTypeId" />
+          </Key>
+          <Property Name="CallFlowStepTypeId" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StepTypeName" Type="nchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="CallFromPhoneAddress">
+          <Key>
+            <PropertyRef Name="CallFromPhoneAddressId" />
+          </Key>
+          <Property Name="CallFromPhoneAddressId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CallSid" Type="nchar" MaxLength="34" Nullable="false" />
+          <Property Name="CallPhoneAddressId" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CallGather">
+          <Key>
+            <PropertyRef Name="CallGatherId" />
+          </Key>
+          <Property Name="CallGatherId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CallSid" Type="nchar" MaxLength="34" Nullable="false" />
+          <Property Name="CallFlowStepId" Type="bigint" Nullable="false" />
+          <Property Name="GatherValue" Type="nchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CallGatherAttempt">
+          <Key>
+            <PropertyRef Name="CallGatherAttemptId" />
+          </Key>
+          <Property Name="CallGatherAttemptId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CallSid" Type="nchar" MaxLength="34" Nullable="false" />
+          <Property Name="CallFlowStepId" Type="bigint" Nullable="false" />
+          <Property Name="Attempts" Type="smallint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CallPhoneAddress">
+          <Key>
+            <PropertyRef Name="CallPhoneAddressId" />
+          </Key>
+          <Property Name="CallPhoneAddressId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="City" Type="nchar" MaxLength="50" />
+          <Property Name="State" Type="nchar" MaxLength="10" />
+          <Property Name="Zip" Type="nchar" MaxLength="10" />
+          <Property Name="Country" Type="nchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="CallSurvey">
+          <Key>
+            <PropertyRef Name="CallSurveyId" />
+          </Key>
+          <Property Name="CallSurveyId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientId" Type="bigint" Nullable="false" />
+          <Property Name="CallSurveyName" Type="nchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CallSurveyAnswer">
+          <Key>
+            <PropertyRef Name="CallSurveyAnswerId" />
+          </Key>
+          <Property Name="CallSurveyAnswerId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CallSid" Type="nchar" MaxLength="34" Nullable="false" />
+          <Property Name="CallSurveyQuestionId" Type="bigint" Nullable="false" />
+          <Property Name="SurveyAnswer" Type="nchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="CallSurveyQuestion">
+          <Key>
+            <PropertyRef Name="CallSurveyQuestionId" />
+          </Key>
+          <Property Name="CallSurveyQuestionId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CallSurveyId" Type="bigint" Nullable="false" />
+          <Property Name="CallFlowStepId" Type="bigint" Nullable="false" />
+          <Property Name="QuestionType" Type="smallint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CallToPhoneAddress">
+          <Key>
+            <PropertyRef Name="CallToPhoneAddressId" />
+          </Key>
+          <Property Name="CallToPhoneAddressId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CallSId" Type="nchar" MaxLength="34" Nullable="false" />
+          <Property Name="CallPhoneAddressId" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Client">
+          <Key>
+            <PropertyRef Name="ClientId" />
+          </Key>
+          <Property Name="ClientId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientName" Type="nchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ClientLocation">
+          <Key>
+            <PropertyRef Name="ClientLocationId" />
+          </Key>
+          <Property Name="ClientLocationId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientId" Type="bigint" Nullable="false" />
+          <Property Name="LocationName" Type="nchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ClientUser">
+          <Key>
+            <PropertyRef Name="ClientUserId" />
+          </Key>
+          <Property Name="ClientUserId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AspNetUserId" Type="nchar" MaxLength="128" Nullable="false" />
+          <Property Name="ClientId" Type="bigint" Nullable="false" />
+          <Property Name="FirstName" Type="nchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastNane" Type="nchar" MaxLength="50" Nullable="false" />
+          <Property Name="PhoneNumber" Type="nchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="Consultant">
+          <Key>
+            <PropertyRef Name="ConsultantId" />
+          </Key>
+          <Property Name="ConsultantId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientId" Type="bigint" Nullable="false" />
+          <Property Name="ConsultantName" Type="nchar" MaxLength="50" Nullable="false" />
+          <Property Name="PhoneNumber" Type="nchar" MaxLength="20" />
+          <Property Name="Email" Type="nchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="ConsultantSchedule">
+          <Key>
+            <PropertyRef Name="ConsultantScheduleId" />
+          </Key>
+          <Property Name="ConsultantScheduleId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ConsultantId" Type="bigint" Nullable="false" />
+          <Property Name="LocationId" Type="bigint" Nullable="false" />
+          <Property Name="DayOfWeek" Type="smallint" Nullable="false" />
+          <Property Name="StartTime" Type="time" Precision="7" Nullable="false" />
+          <Property Name="EndTime" Type="time" Precision="7" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="CustomerId" />
+          </Key>
+          <Property Name="CustomerId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="nchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="nchar" MaxLength="50" Nullable="false" />
+          <Property Name="PhoneNumber" Type="nchar" MaxLength="20" />
+          <Property Name="EmailAddress" Type="nchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="ServiceCategory">
+          <Key>
+            <PropertyRef Name="ServiceCategoryId" />
+          </Key>
+          <Property Name="ServiceCategoryId" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SessionTime">
+          <Key>
+            <PropertyRef Name="SessionTimeId" />
+          </Key>
+          <Property Name="SessionTimeId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ConsultantId" Type="bigint" Nullable="false" />
+          <Property Name="ServiceCategoryId" Type="smallint" Nullable="false" />
+          <Property Name="SessionMinutes" Type="smallint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SurveyQuestionType">
+          <Key>
+            <PropertyRef Name="SurveyQuestionTypeId" />
+          </Key>
+          <Property Name="SurveyQuestionTypeId" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SureveyQuestionTypeName" Type="nchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="Tollfree">
+          <Key>
+            <PropertyRef Name="TollfreeId" />
+          </Key>
+          <Property Name="TollfreeId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TollfreeNumber" Type="nchar" MaxLength="20" Nullable="false" />
+          <Property Name="CallFlowId" Type="bigint" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Appointment_ClientLocation">
+          <End Role="ClientLocation" Type="Self.ClientLocation" Multiplicity="1" />
+          <End Role="Appointment" Type="Self.Appointment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ClientLocation">
+              <PropertyRef Name="ClientLocationId" />
+            </Principal>
+            <Dependent Role="Appointment">
+              <PropertyRef Name="LocationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Appointment_Consultant">
+          <End Role="Consultant" Type="Self.Consultant" Multiplicity="1" />
+          <End Role="Appointment" Type="Self.Appointment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Consultant">
+              <PropertyRef Name="ConsultantId" />
+            </Principal>
+            <Dependent Role="Appointment">
+              <PropertyRef Name="ConsultantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Appointment_Customer">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
+          <End Role="Appointment" Type="Self.Appointment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="Appointment">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Appointment_ServiceCategory">
+          <End Role="ServiceCategory" Type="Self.ServiceCategory" Multiplicity="1" />
+          <End Role="Appointment" Type="Self.Appointment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ServiceCategory">
+              <PropertyRef Name="ServiceCategoryId" />
+            </Principal>
+            <Dependent Role="Appointment">
+              <PropertyRef Name="ServiceCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Call_CallDirection">
+          <End Role="CallDirection" Type="Self.CallDirection" Multiplicity="1" />
+          <End Role="Call" Type="Self.Call" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CallDirection">
+              <PropertyRef Name="CallDirectionId" />
+            </Principal>
+            <Dependent Role="Call">
+              <PropertyRef Name="Direction" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallAction_Call">
+          <End Role="Call" Type="Self.Call" Multiplicity="1" />
+          <End Role="CallAction" Type="Self.CallAction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Call">
+              <PropertyRef Name="CallSid" />
+            </Principal>
+            <Dependent Role="CallAction">
+              <PropertyRef Name="CallSid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallFlow_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="CallFlow" Type="Self.CallFlow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="CallFlow">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallFlowStep_CallFlow">
+          <End Role="CallFlow" Type="Self.CallFlow" Multiplicity="1" />
+          <End Role="CallFlowStep" Type="Self.CallFlowStep" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CallFlow">
+              <PropertyRef Name="CallFlowId" />
+            </Principal>
+            <Dependent Role="CallFlowStep">
+              <PropertyRef Name="CallFlowId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallFlowStep_CallFlowStepType">
+          <End Role="CallFlowStepType" Type="Self.CallFlowStepType" Multiplicity="1" />
+          <End Role="CallFlowStep" Type="Self.CallFlowStep" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CallFlowStepType">
+              <PropertyRef Name="CallFlowStepTypeId" />
+            </Principal>
+            <Dependent Role="CallFlowStep">
+              <PropertyRef Name="CallFlowStepType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallFlowStepDial_CallFlowStep">
+          <End Role="CallFlowStep" Type="Self.CallFlowStep" Multiplicity="1" />
+          <End Role="CallFlowStepDial" Type="Self.CallFlowStepDial" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="CallFlowStep">
+              <PropertyRef Name="CallFlowStepId" />
+            </Principal>
+            <Dependent Role="CallFlowStepDial">
+              <PropertyRef Name="CallFlowStepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallFlowStepGather_CallFlowStep">
+          <End Role="CallFlowStep" Type="Self.CallFlowStep" Multiplicity="1" />
+          <End Role="CallFlowStepGather" Type="Self.CallFlowStepGather" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="CallFlowStep">
+              <PropertyRef Name="CallFlowStepId" />
+            </Principal>
+            <Dependent Role="CallFlowStepGather">
+              <PropertyRef Name="CallFlowStepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallFlowStepGatherRetry_CallFlowStep">
+          <End Role="CallFlowStep" Type="Self.CallFlowStep" Multiplicity="1" />
+          <End Role="CallFlowStepGatherRetry" Type="Self.CallFlowStepGatherRetry" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CallFlowStep">
+              <PropertyRef Name="CallFlowStepId" />
+            </Principal>
+            <Dependent Role="CallFlowStepGatherRetry">
+              <PropertyRef Name="FailCallFlowStepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallFlowStepGatherRetry_CallFlowStepGather">
+          <End Role="CallFlowStepGather" Type="Self.CallFlowStepGather" Multiplicity="1" />
+          <End Role="CallFlowStepGatherRetry" Type="Self.CallFlowStepGatherRetry" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="CallFlowStepGather">
+              <PropertyRef Name="CallFlowStepId" />
+            </Principal>
+            <Dependent Role="CallFlowStepGatherRetry">
+              <PropertyRef Name="CallFlowStepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallFlowStepOption_CallFlowStep">
+          <End Role="CallFlowStep" Type="Self.CallFlowStep" Multiplicity="1" />
+          <End Role="CallFlowStepOption" Type="Self.CallFlowStepOption" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CallFlowStep">
+              <PropertyRef Name="CallFlowStepId" />
+            </Principal>
+            <Dependent Role="CallFlowStepOption">
+              <PropertyRef Name="NextCallFlowStepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallFlowStepOption_CallFlowStepGather">
+          <End Role="CallFlowStepGather" Type="Self.CallFlowStepGather" Multiplicity="1" />
+          <End Role="CallFlowStepOption" Type="Self.CallFlowStepOption" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CallFlowStepGather">
+              <PropertyRef Name="CallFlowStepId" />
+            </Principal>
+            <Dependent Role="CallFlowStepOption">
+              <PropertyRef Name="CallFlowStepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallFlowStepSay_CallFlowStep">
+          <End Role="CallFlowStep" Type="Self.CallFlowStep" Multiplicity="1" />
+          <End Role="CallFlowStepSay" Type="Self.CallFlowStepSay" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="CallFlowStep">
+              <PropertyRef Name="CallFlowStepId" />
+            </Principal>
+            <Dependent Role="CallFlowStepSay">
+              <PropertyRef Name="CallFlowStepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallFromPhoneAddress_Call">
+          <End Role="Call" Type="Self.Call" Multiplicity="1" />
+          <End Role="CallFromPhoneAddress" Type="Self.CallFromPhoneAddress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Call">
+              <PropertyRef Name="CallSid" />
+            </Principal>
+            <Dependent Role="CallFromPhoneAddress">
+              <PropertyRef Name="CallSid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallFromPhoneAddress_CallPhoneAddress">
+          <End Role="CallPhoneAddress" Type="Self.CallPhoneAddress" Multiplicity="1" />
+          <End Role="CallFromPhoneAddress" Type="Self.CallFromPhoneAddress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CallPhoneAddress">
+              <PropertyRef Name="CallPhoneAddressId" />
+            </Principal>
+            <Dependent Role="CallFromPhoneAddress">
+              <PropertyRef Name="CallPhoneAddressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallGather_Call">
+          <End Role="Call" Type="Self.Call" Multiplicity="1" />
+          <End Role="CallGather" Type="Self.CallGather" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Call">
+              <PropertyRef Name="CallSid" />
+            </Principal>
+            <Dependent Role="CallGather">
+              <PropertyRef Name="CallSid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallGather_CallFlowStep">
+          <End Role="CallFlowStep" Type="Self.CallFlowStep" Multiplicity="1" />
+          <End Role="CallGather" Type="Self.CallGather" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CallFlowStep">
+              <PropertyRef Name="CallFlowStepId" />
+            </Principal>
+            <Dependent Role="CallGather">
+              <PropertyRef Name="CallFlowStepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallGatherAttempt_Call">
+          <End Role="Call" Type="Self.Call" Multiplicity="1" />
+          <End Role="CallGatherAttempt" Type="Self.CallGatherAttempt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Call">
+              <PropertyRef Name="CallSid" />
+            </Principal>
+            <Dependent Role="CallGatherAttempt">
+              <PropertyRef Name="CallSid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallGatherAttempt_CallFlowStepGather">
+          <End Role="CallFlowStepGather" Type="Self.CallFlowStepGather" Multiplicity="1" />
+          <End Role="CallGatherAttempt" Type="Self.CallGatherAttempt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CallFlowStepGather">
+              <PropertyRef Name="CallFlowStepId" />
+            </Principal>
+            <Dependent Role="CallGatherAttempt">
+              <PropertyRef Name="CallFlowStepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallSurvey_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="CallSurvey" Type="Self.CallSurvey" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="CallSurvey">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallSurveyAnswer_Call">
+          <End Role="Call" Type="Self.Call" Multiplicity="1" />
+          <End Role="CallSurveyAnswer" Type="Self.CallSurveyAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Call">
+              <PropertyRef Name="CallSid" />
+            </Principal>
+            <Dependent Role="CallSurveyAnswer">
+              <PropertyRef Name="CallSid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallSurveyAnswer_CallSurveyQuestion">
+          <End Role="CallSurveyQuestion" Type="Self.CallSurveyQuestion" Multiplicity="1" />
+          <End Role="CallSurveyAnswer" Type="Self.CallSurveyAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CallSurveyQuestion">
+              <PropertyRef Name="CallSurveyQuestionId" />
+            </Principal>
+            <Dependent Role="CallSurveyAnswer">
+              <PropertyRef Name="CallSurveyQuestionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallSurveyQuestion_CallFlowStepGather">
+          <End Role="CallFlowStepGather" Type="Self.CallFlowStepGather" Multiplicity="1" />
+          <End Role="CallSurveyQuestion" Type="Self.CallSurveyQuestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CallFlowStepGather">
+              <PropertyRef Name="CallFlowStepId" />
+            </Principal>
+            <Dependent Role="CallSurveyQuestion">
+              <PropertyRef Name="CallFlowStepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallSurveyQuestion_CallSurvey">
+          <End Role="CallSurvey" Type="Self.CallSurvey" Multiplicity="1" />
+          <End Role="CallSurveyQuestion" Type="Self.CallSurveyQuestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CallSurvey">
+              <PropertyRef Name="CallSurveyId" />
+            </Principal>
+            <Dependent Role="CallSurveyQuestion">
+              <PropertyRef Name="CallSurveyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallSurveyQuestion_SurveyQuestionType">
+          <End Role="SurveyQuestionType" Type="Self.SurveyQuestionType" Multiplicity="1" />
+          <End Role="CallSurveyQuestion" Type="Self.CallSurveyQuestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SurveyQuestionType">
+              <PropertyRef Name="SurveyQuestionTypeId" />
+            </Principal>
+            <Dependent Role="CallSurveyQuestion">
+              <PropertyRef Name="QuestionType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallToPhoneAddress_Call">
+          <End Role="Call" Type="Self.Call" Multiplicity="1" />
+          <End Role="CallToPhoneAddress" Type="Self.CallToPhoneAddress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Call">
+              <PropertyRef Name="CallSid" />
+            </Principal>
+            <Dependent Role="CallToPhoneAddress">
+              <PropertyRef Name="CallSId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallToPhoneAddress_CallPhoneAddress">
+          <End Role="CallPhoneAddress" Type="Self.CallPhoneAddress" Multiplicity="1" />
+          <End Role="CallToPhoneAddress" Type="Self.CallToPhoneAddress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CallPhoneAddress">
+              <PropertyRef Name="CallPhoneAddressId" />
+            </Principal>
+            <Dependent Role="CallToPhoneAddress">
+              <PropertyRef Name="CallPhoneAddressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ClientLocation_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="ClientLocation" Type="Self.ClientLocation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="ClientLocation">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ClientUser_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="ClientUser" Type="Self.ClientUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="ClientUser">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ConsultantSchedule_ClientLocation">
+          <End Role="ClientLocation" Type="Self.ClientLocation" Multiplicity="1" />
+          <End Role="ConsultantSchedule" Type="Self.ConsultantSchedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ClientLocation">
+              <PropertyRef Name="ClientLocationId" />
+            </Principal>
+            <Dependent Role="ConsultantSchedule">
+              <PropertyRef Name="LocationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ConsultantSchedule_Consultant">
+          <End Role="Consultant" Type="Self.Consultant" Multiplicity="1" />
+          <End Role="ConsultantSchedule" Type="Self.ConsultantSchedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Consultant">
+              <PropertyRef Name="ConsultantId" />
+            </Principal>
+            <Dependent Role="ConsultantSchedule">
+              <PropertyRef Name="ConsultantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SessionTime_Consultant">
+          <End Role="Consultant" Type="Self.Consultant" Multiplicity="1" />
+          <End Role="SessionTime" Type="Self.SessionTime" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Consultant">
+              <PropertyRef Name="ConsultantId" />
+            </Principal>
+            <Dependent Role="SessionTime">
+              <PropertyRef Name="ConsultantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SessionTime_ServiceCategory">
+          <End Role="ServiceCategory" Type="Self.ServiceCategory" Multiplicity="1" />
+          <End Role="SessionTime" Type="Self.SessionTime" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ServiceCategory">
+              <PropertyRef Name="ServiceCategoryId" />
+            </Principal>
+            <Dependent Role="SessionTime">
+              <PropertyRef Name="ServiceCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tollfree_CallFlow">
+          <End Role="CallFlow" Type="Self.CallFlow" Multiplicity="1" />
+          <End Role="Tollfree" Type="Self.Tollfree" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CallFlow">
+              <PropertyRef Name="CallFlowId" />
+            </Principal>
+            <Dependent Role="Tollfree">
+              <PropertyRef Name="CallFlowId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CallTraxModelStoreContainer">
+          <EntitySet Name="Appointment" EntityType="Self.Appointment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Call" EntityType="Self.Call" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CallAction" EntityType="Self.CallAction" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CallDirection" EntityType="Self.CallDirection" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CallFlow" EntityType="Self.CallFlow" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CallFlowStep" EntityType="Self.CallFlowStep" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CallFlowStepDial" EntityType="Self.CallFlowStepDial" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CallFlowStepGather" EntityType="Self.CallFlowStepGather" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CallFlowStepGatherRetry" EntityType="Self.CallFlowStepGatherRetry" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CallFlowStepOption" EntityType="Self.CallFlowStepOption" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CallFlowStepSay" EntityType="Self.CallFlowStepSay" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CallFlowStepType" EntityType="Self.CallFlowStepType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CallFromPhoneAddress" EntityType="Self.CallFromPhoneAddress" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CallGather" EntityType="Self.CallGather" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CallGatherAttempt" EntityType="Self.CallGatherAttempt" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CallPhoneAddress" EntityType="Self.CallPhoneAddress" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CallSurvey" EntityType="Self.CallSurvey" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CallSurveyAnswer" EntityType="Self.CallSurveyAnswer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CallSurveyQuestion" EntityType="Self.CallSurveyQuestion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CallToPhoneAddress" EntityType="Self.CallToPhoneAddress" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Client" EntityType="Self.Client" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ClientLocation" EntityType="Self.ClientLocation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ClientUser" EntityType="Self.ClientUser" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Consultant" EntityType="Self.Consultant" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ConsultantSchedule" EntityType="Self.ConsultantSchedule" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ServiceCategory" EntityType="Self.ServiceCategory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SessionTime" EntityType="Self.SessionTime" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SurveyQuestionType" EntityType="Self.SurveyQuestionType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tollfree" EntityType="Self.Tollfree" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Appointment_ClientLocation" Association="Self.FK_Appointment_ClientLocation">
+            <End Role="ClientLocation" EntitySet="ClientLocation" />
+            <End Role="Appointment" EntitySet="Appointment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Appointment_Consultant" Association="Self.FK_Appointment_Consultant">
+            <End Role="Consultant" EntitySet="Consultant" />
+            <End Role="Appointment" EntitySet="Appointment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Appointment_Customer" Association="Self.FK_Appointment_Customer">
+            <End Role="Customer" EntitySet="Customer" />
+            <End Role="Appointment" EntitySet="Appointment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Appointment_ServiceCategory" Association="Self.FK_Appointment_ServiceCategory">
+            <End Role="ServiceCategory" EntitySet="ServiceCategory" />
+            <End Role="Appointment" EntitySet="Appointment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Call_CallDirection" Association="Self.FK_Call_CallDirection">
+            <End Role="CallDirection" EntitySet="CallDirection" />
+            <End Role="Call" EntitySet="Call" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallAction_Call" Association="Self.FK_CallAction_Call">
+            <End Role="Call" EntitySet="Call" />
+            <End Role="CallAction" EntitySet="CallAction" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallFlow_Client" Association="Self.FK_CallFlow_Client">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="CallFlow" EntitySet="CallFlow" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallFlowStep_CallFlow" Association="Self.FK_CallFlowStep_CallFlow">
+            <End Role="CallFlow" EntitySet="CallFlow" />
+            <End Role="CallFlowStep" EntitySet="CallFlowStep" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallFlowStep_CallFlowStepType" Association="Self.FK_CallFlowStep_CallFlowStepType">
+            <End Role="CallFlowStepType" EntitySet="CallFlowStepType" />
+            <End Role="CallFlowStep" EntitySet="CallFlowStep" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallFlowStepDial_CallFlowStep" Association="Self.FK_CallFlowStepDial_CallFlowStep">
+            <End Role="CallFlowStep" EntitySet="CallFlowStep" />
+            <End Role="CallFlowStepDial" EntitySet="CallFlowStepDial" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallFlowStepGather_CallFlowStep" Association="Self.FK_CallFlowStepGather_CallFlowStep">
+            <End Role="CallFlowStep" EntitySet="CallFlowStep" />
+            <End Role="CallFlowStepGather" EntitySet="CallFlowStepGather" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallFlowStepGatherRetry_CallFlowStep" Association="Self.FK_CallFlowStepGatherRetry_CallFlowStep">
+            <End Role="CallFlowStep" EntitySet="CallFlowStep" />
+            <End Role="CallFlowStepGatherRetry" EntitySet="CallFlowStepGatherRetry" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallFlowStepGatherRetry_CallFlowStepGather" Association="Self.FK_CallFlowStepGatherRetry_CallFlowStepGather">
+            <End Role="CallFlowStepGather" EntitySet="CallFlowStepGather" />
+            <End Role="CallFlowStepGatherRetry" EntitySet="CallFlowStepGatherRetry" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallFlowStepOption_CallFlowStep" Association="Self.FK_CallFlowStepOption_CallFlowStep">
+            <End Role="CallFlowStep" EntitySet="CallFlowStep" />
+            <End Role="CallFlowStepOption" EntitySet="CallFlowStepOption" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallFlowStepOption_CallFlowStepGather" Association="Self.FK_CallFlowStepOption_CallFlowStepGather">
+            <End Role="CallFlowStepGather" EntitySet="CallFlowStepGather" />
+            <End Role="CallFlowStepOption" EntitySet="CallFlowStepOption" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallFlowStepSay_CallFlowStep" Association="Self.FK_CallFlowStepSay_CallFlowStep">
+            <End Role="CallFlowStep" EntitySet="CallFlowStep" />
+            <End Role="CallFlowStepSay" EntitySet="CallFlowStepSay" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallFromPhoneAddress_Call" Association="Self.FK_CallFromPhoneAddress_Call">
+            <End Role="Call" EntitySet="Call" />
+            <End Role="CallFromPhoneAddress" EntitySet="CallFromPhoneAddress" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallFromPhoneAddress_CallPhoneAddress" Association="Self.FK_CallFromPhoneAddress_CallPhoneAddress">
+            <End Role="CallPhoneAddress" EntitySet="CallPhoneAddress" />
+            <End Role="CallFromPhoneAddress" EntitySet="CallFromPhoneAddress" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallGather_Call" Association="Self.FK_CallGather_Call">
+            <End Role="Call" EntitySet="Call" />
+            <End Role="CallGather" EntitySet="CallGather" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallGather_CallFlowStep" Association="Self.FK_CallGather_CallFlowStep">
+            <End Role="CallFlowStep" EntitySet="CallFlowStep" />
+            <End Role="CallGather" EntitySet="CallGather" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallGatherAttempt_Call" Association="Self.FK_CallGatherAttempt_Call">
+            <End Role="Call" EntitySet="Call" />
+            <End Role="CallGatherAttempt" EntitySet="CallGatherAttempt" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallGatherAttempt_CallFlowStepGather" Association="Self.FK_CallGatherAttempt_CallFlowStepGather">
+            <End Role="CallFlowStepGather" EntitySet="CallFlowStepGather" />
+            <End Role="CallGatherAttempt" EntitySet="CallGatherAttempt" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallSurvey_Client" Association="Self.FK_CallSurvey_Client">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="CallSurvey" EntitySet="CallSurvey" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallSurveyAnswer_Call" Association="Self.FK_CallSurveyAnswer_Call">
+            <End Role="Call" EntitySet="Call" />
+            <End Role="CallSurveyAnswer" EntitySet="CallSurveyAnswer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallSurveyAnswer_CallSurveyQuestion" Association="Self.FK_CallSurveyAnswer_CallSurveyQuestion">
+            <End Role="CallSurveyQuestion" EntitySet="CallSurveyQuestion" />
+            <End Role="CallSurveyAnswer" EntitySet="CallSurveyAnswer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallSurveyQuestion_CallFlowStepGather" Association="Self.FK_CallSurveyQuestion_CallFlowStepGather">
+            <End Role="CallFlowStepGather" EntitySet="CallFlowStepGather" />
+            <End Role="CallSurveyQuestion" EntitySet="CallSurveyQuestion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallSurveyQuestion_CallSurvey" Association="Self.FK_CallSurveyQuestion_CallSurvey">
+            <End Role="CallSurvey" EntitySet="CallSurvey" />
+            <End Role="CallSurveyQuestion" EntitySet="CallSurveyQuestion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallSurveyQuestion_SurveyQuestionType" Association="Self.FK_CallSurveyQuestion_SurveyQuestionType">
+            <End Role="SurveyQuestionType" EntitySet="SurveyQuestionType" />
+            <End Role="CallSurveyQuestion" EntitySet="CallSurveyQuestion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallToPhoneAddress_Call" Association="Self.FK_CallToPhoneAddress_Call">
+            <End Role="Call" EntitySet="Call" />
+            <End Role="CallToPhoneAddress" EntitySet="CallToPhoneAddress" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallToPhoneAddress_CallPhoneAddress" Association="Self.FK_CallToPhoneAddress_CallPhoneAddress">
+            <End Role="CallPhoneAddress" EntitySet="CallPhoneAddress" />
+            <End Role="CallToPhoneAddress" EntitySet="CallToPhoneAddress" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ClientLocation_Client" Association="Self.FK_ClientLocation_Client">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="ClientLocation" EntitySet="ClientLocation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ClientUser_Client" Association="Self.FK_ClientUser_Client">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="ClientUser" EntitySet="ClientUser" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ConsultantSchedule_ClientLocation" Association="Self.FK_ConsultantSchedule_ClientLocation">
+            <End Role="ClientLocation" EntitySet="ClientLocation" />
+            <End Role="ConsultantSchedule" EntitySet="ConsultantSchedule" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ConsultantSchedule_Consultant" Association="Self.FK_ConsultantSchedule_Consultant">
+            <End Role="Consultant" EntitySet="Consultant" />
+            <End Role="ConsultantSchedule" EntitySet="ConsultantSchedule" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SessionTime_Consultant" Association="Self.FK_SessionTime_Consultant">
+            <End Role="Consultant" EntitySet="Consultant" />
+            <End Role="SessionTime" EntitySet="SessionTime" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SessionTime_ServiceCategory" Association="Self.FK_SessionTime_ServiceCategory">
+            <End Role="ServiceCategory" EntitySet="ServiceCategory" />
+            <End Role="SessionTime" EntitySet="SessionTime" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tollfree_CallFlow" Association="Self.FK_Tollfree_CallFlow">
+            <End Role="CallFlow" EntitySet="CallFlow" />
+            <End Role="Tollfree" EntitySet="Tollfree" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CallTraxModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Appointment">
+          <Key>
+            <PropertyRef Name="AppointmentId" />
+          </Key>
+          <Property Name="AppointmentId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StartDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EndDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CustomerId" Type="Int64" Nullable="false" />
+          <Property Name="ServiceCategoryId" Type="Int16" Nullable="false" />
+          <Property Name="LocationId" Type="Int64" Nullable="false" />
+          <Property Name="ConsultantId" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="ClientLocation" Relationship="Self.FK_Appointment_ClientLocation" FromRole="Appointment" ToRole="ClientLocation" />
+          <NavigationProperty Name="Consultant" Relationship="Self.FK_Appointment_Consultant" FromRole="Appointment" ToRole="Consultant" />
+          <NavigationProperty Name="Customer" Relationship="Self.FK_Appointment_Customer" FromRole="Appointment" ToRole="Customer" />
+          <NavigationProperty Name="ServiceCategory" Relationship="Self.FK_Appointment_ServiceCategory" FromRole="Appointment" ToRole="ServiceCategory" />
+        </EntityType>
+        <EntityType Name="Call">
+          <Key>
+            <PropertyRef Name="CallSid" />
+          </Key>
+          <Property Name="CallSid" Type="String" MaxLength="34" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="DateTimeReceived" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CallFlowId" Type="Int64" Nullable="false" />
+          <Property Name="AccountSid" Type="String" MaxLength="34" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="FromPhoneNumber" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="ToPhoneNUmber" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="CallStatus" Type="Int16" Nullable="false" />
+          <Property Name="Direction" Type="Int16" Nullable="false" />
+          <Property Name="ApiVersion" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="ForwardedFrom" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="CallerName" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="ParentCallSid" Type="String" MaxLength="34" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="CallDirection" Relationship="Self.FK_Call_CallDirection" FromRole="Call" ToRole="CallDirection" />
+          <NavigationProperty Name="CallActions" Relationship="Self.FK_CallAction_Call" FromRole="Call" ToRole="CallAction" />
+          <NavigationProperty Name="CallFromPhoneAddresses" Relationship="Self.FK_CallFromPhoneAddress_Call" FromRole="Call" ToRole="CallFromPhoneAddress" />
+          <NavigationProperty Name="CallGathers" Relationship="Self.FK_CallGather_Call" FromRole="Call" ToRole="CallGather" />
+          <NavigationProperty Name="CallGatherAttempts" Relationship="Self.FK_CallGatherAttempt_Call" FromRole="Call" ToRole="CallGatherAttempt" />
+          <NavigationProperty Name="CallSurveyAnswers" Relationship="Self.FK_CallSurveyAnswer_Call" FromRole="Call" ToRole="CallSurveyAnswer" />
+          <NavigationProperty Name="CallToPhoneAddresses" Relationship="Self.FK_CallToPhoneAddress_Call" FromRole="Call" ToRole="CallToPhoneAddress" />
+        </EntityType>
+        <EntityType Name="CallAction">
+          <Key>
+            <PropertyRef Name="CallActionId" />
+          </Key>
+          <Property Name="CallActionId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ActionDateTime" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="CallSid" Type="String" MaxLength="34" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="ActionDescription" Type="String" MaxLength="100" FixedLength="true" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Call" Relationship="Self.FK_CallAction_Call" FromRole="CallAction" ToRole="Call" />
+        </EntityType>
+        <EntityType Name="CallDirection">
+          <Key>
+            <PropertyRef Name="CallDirectionId" />
+          </Key>
+          <Property Name="CallDirectionId" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CallDirectionName" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Calls" Relationship="Self.FK_Call_CallDirection" FromRole="CallDirection" ToRole="Call" />
+        </EntityType>
+        <EntityType Name="CallFlow">
+          <Key>
+            <PropertyRef Name="CallFlowId" />
+          </Key>
+          <Property Name="CallFlowId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientId" Type="Int64" Nullable="false" />
+          <Property Name="FlowName" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Client" Relationship="Self.FK_CallFlow_Client" FromRole="CallFlow" ToRole="Client" />
+          <NavigationProperty Name="CallFlowSteps" Relationship="Self.FK_CallFlowStep_CallFlow" FromRole="CallFlow" ToRole="CallFlowStep" />
+          <NavigationProperty Name="Tollfrees" Relationship="Self.FK_Tollfree_CallFlow" FromRole="CallFlow" ToRole="Tollfree" />
+        </EntityType>
+        <EntityType Name="CallFlowStep">
+          <Key>
+            <PropertyRef Name="CallFlowStepId" />
+          </Key>
+          <Property Name="CallFlowStepId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CallFlowId" Type="Int64" Nullable="false" />
+          <Property Name="CallFlowStepType" Type="Int16" Nullable="false" />
+          <Property Name="IsWelcomeStep" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="CallFlow" Relationship="Self.FK_CallFlowStep_CallFlow" FromRole="CallFlowStep" ToRole="CallFlow" />
+          <NavigationProperty Name="CallFlowStepType1" Relationship="Self.FK_CallFlowStep_CallFlowStepType" FromRole="CallFlowStep" ToRole="CallFlowStepType" />
+          <NavigationProperty Name="CallFlowStepDial" Relationship="Self.FK_CallFlowStepDial_CallFlowStep" FromRole="CallFlowStep" ToRole="CallFlowStepDial" />
+          <NavigationProperty Name="CallFlowStepGather" Relationship="Self.FK_CallFlowStepGather_CallFlowStep" FromRole="CallFlowStep" ToRole="CallFlowStepGather" />
+          <NavigationProperty Name="CallFlowStepGatherRetries" Relationship="Self.FK_CallFlowStepGatherRetry_CallFlowStep" FromRole="CallFlowStep" ToRole="CallFlowStepGatherRetry" />
+          <NavigationProperty Name="CallFlowStepOptions" Relationship="Self.FK_CallFlowStepOption_CallFlowStep" FromRole="CallFlowStep" ToRole="CallFlowStepOption" />
+          <NavigationProperty Name="CallFlowStepSay" Relationship="Self.FK_CallFlowStepSay_CallFlowStep" FromRole="CallFlowStep" ToRole="CallFlowStepSay" />
+          <NavigationProperty Name="CallGathers" Relationship="Self.FK_CallGather_CallFlowStep" FromRole="CallFlowStep" ToRole="CallGather" />
+        </EntityType>
+        <EntityType Name="CallFlowStepDial">
+          <Key>
+            <PropertyRef Name="CallFlowStepId" />
+          </Key>
+          <Property Name="CallFlowStepId" Type="Int64" Nullable="false" />
+          <Property Name="DialPhoneNumber" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="CallFlowStep" Relationship="Self.FK_CallFlowStepDial_CallFlowStep" FromRole="CallFlowStepDial" ToRole="CallFlowStep" />
+        </EntityType>
+        <EntityType Name="CallFlowStepGather">
+          <Key>
+            <PropertyRef Name="CallFlowStepId" />
+          </Key>
+          <Property Name="CallFlowStepId" Type="Int64" Nullable="false" />
+          <Property Name="GatherName" Type="String" MaxLength="100" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Attempts" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="CallFlowStep" Relationship="Self.FK_CallFlowStepGather_CallFlowStep" FromRole="CallFlowStepGather" ToRole="CallFlowStep" />
+          <NavigationProperty Name="CallFlowStepGatherRetry" Relationship="Self.FK_CallFlowStepGatherRetry_CallFlowStepGather" FromRole="CallFlowStepGather" ToRole="CallFlowStepGatherRetry" />
+          <NavigationProperty Name="CallFlowStepOptions" Relationship="Self.FK_CallFlowStepOption_CallFlowStepGather" FromRole="CallFlowStepGather" ToRole="CallFlowStepOption" />
+          <NavigationProperty Name="CallGatherAttempts" Relationship="Self.FK_CallGatherAttempt_CallFlowStepGather" FromRole="CallFlowStepGather" ToRole="CallGatherAttempt" />
+          <NavigationProperty Name="CallSurveyQuestions" Relationship="Self.FK_CallSurveyQuestion_CallFlowStepGather" FromRole="CallFlowStepGather" ToRole="CallSurveyQuestion" />
+        </EntityType>
+        <EntityType Name="CallFlowStepGatherRetry">
+          <Key>
+            <PropertyRef Name="CallFlowStepId" />
+          </Key>
+          <Property Name="CallFlowStepId" Type="Int64" Nullable="false" />
+          <Property Name="RetrySay" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <Property Name="FailCallFlowStepId" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="CallFlowStep" Relationship="Self.FK_CallFlowStepGatherRetry_CallFlowStep" FromRole="CallFlowStepGatherRetry" ToRole="CallFlowStep" />
+          <NavigationProperty Name="CallFlowStepGather" Relationship="Self.FK_CallFlowStepGatherRetry_CallFlowStepGather" FromRole="CallFlowStepGatherRetry" ToRole="CallFlowStepGather" />
+        </EntityType>
+        <EntityType Name="CallFlowStepOption">
+          <Key>
+            <PropertyRef Name="CallFlowStepOptionId" />
+          </Key>
+          <Property Name="CallFlowStepOptionId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CallFlowStepId" Type="Int64" Nullable="false" />
+          <Property Name="OptionDescription" Type="String" MaxLength="100" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="OptionValue" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="NextCallFlowStepId" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="CallFlowStep" Relationship="Self.FK_CallFlowStepOption_CallFlowStep" FromRole="CallFlowStepOption" ToRole="CallFlowStep" />
+          <NavigationProperty Name="CallFlowStepGather" Relationship="Self.FK_CallFlowStepOption_CallFlowStepGather" FromRole="CallFlowStepOption" ToRole="CallFlowStepGather" />
+        </EntityType>
+        <EntityType Name="CallFlowStepSay">
+          <Key>
+            <PropertyRef Name="CallFlowStepId" />
+          </Key>
+          <Property Name="CallFlowStepId" Type="Int64" Nullable="false" />
+          <Property Name="SayText" Type="String" MaxLength="1000" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Language" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="CallFlowStep" Relationship="Self.FK_CallFlowStepSay_CallFlowStep" FromRole="CallFlowStepSay" ToRole="CallFlowStep" />
+        </EntityType>
+        <EntityType Name="CallFlowStepType">
+          <Key>
+            <PropertyRef Name="CallFlowStepTypeId" />
+          </Key>
+          <Property Name="CallFlowStepTypeId" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StepTypeName" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="CallFlowSteps" Relationship="Self.FK_CallFlowStep_CallFlowStepType" FromRole="CallFlowStepType" ToRole="CallFlowStep" />
+        </EntityType>
+        <EntityType Name="CallFromPhoneAddress">
+          <Key>
+            <PropertyRef Name="CallFromPhoneAddressId" />
+          </Key>
+          <Property Name="CallFromPhoneAddressId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CallSid" Type="String" MaxLength="34" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="CallPhoneAddressId" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="Call" Relationship="Self.FK_CallFromPhoneAddress_Call" FromRole="CallFromPhoneAddress" ToRole="Call" />
+          <NavigationProperty Name="CallPhoneAddress" Relationship="Self.FK_CallFromPhoneAddress_CallPhoneAddress" FromRole="CallFromPhoneAddress" ToRole="CallPhoneAddress" />
+        </EntityType>
+        <EntityType Name="CallGather">
+          <Key>
+            <PropertyRef Name="CallGatherId" />
+          </Key>
+          <Property Name="CallGatherId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CallSid" Type="String" MaxLength="34" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="CallFlowStepId" Type="Int64" Nullable="false" />
+          <Property Name="GatherValue" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Call" Relationship="Self.FK_CallGather_Call" FromRole="CallGather" ToRole="Call" />
+          <NavigationProperty Name="CallFlowStep" Relationship="Self.FK_CallGather_CallFlowStep" FromRole="CallGather" ToRole="CallFlowStep" />
+        </EntityType>
+        <EntityType Name="CallGatherAttempt">
+          <Key>
+            <PropertyRef Name="CallGatherAttemptId" />
+          </Key>
+          <Property Name="CallGatherAttemptId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CallSid" Type="String" MaxLength="34" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="CallFlowStepId" Type="Int64" Nullable="false" />
+          <Property Name="Attempts" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="Call" Relationship="Self.FK_CallGatherAttempt_Call" FromRole="CallGatherAttempt" ToRole="Call" />
+          <NavigationProperty Name="CallFlowStepGather" Relationship="Self.FK_CallGatherAttempt_CallFlowStepGather" FromRole="CallGatherAttempt" ToRole="CallFlowStepGather" />
+        </EntityType>
+        <EntityType Name="CallPhoneAddress">
+          <Key>
+            <PropertyRef Name="CallPhoneAddressId" />
+          </Key>
+          <Property Name="CallPhoneAddressId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="City" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="State" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Zip" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Country" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="CallFromPhoneAddresses" Relationship="Self.FK_CallFromPhoneAddress_CallPhoneAddress" FromRole="CallPhoneAddress" ToRole="CallFromPhoneAddress" />
+          <NavigationProperty Name="CallToPhoneAddresses" Relationship="Self.FK_CallToPhoneAddress_CallPhoneAddress" FromRole="CallPhoneAddress" ToRole="CallToPhoneAddress" />
+        </EntityType>
+        <EntityType Name="CallSurvey">
+          <Key>
+            <PropertyRef Name="CallSurveyId" />
+          </Key>
+          <Property Name="CallSurveyId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientId" Type="Int64" Nullable="false" />
+          <Property Name="CallSurveyName" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Client" Relationship="Self.FK_CallSurvey_Client" FromRole="CallSurvey" ToRole="Client" />
+          <NavigationProperty Name="CallSurveyQuestions" Relationship="Self.FK_CallSurveyQuestion_CallSurvey" FromRole="CallSurvey" ToRole="CallSurveyQuestion" />
+        </EntityType>
+        <EntityType Name="CallSurveyAnswer">
+          <Key>
+            <PropertyRef Name="CallSurveyAnswerId" />
+          </Key>
+          <Property Name="CallSurveyAnswerId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CallSid" Type="String" MaxLength="34" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="CallSurveyQuestionId" Type="Int64" Nullable="false" />
+          <Property Name="SurveyAnswer" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Call" Relationship="Self.FK_CallSurveyAnswer_Call" FromRole="CallSurveyAnswer" ToRole="Call" />
+          <NavigationProperty Name="CallSurveyQuestion" Relationship="Self.FK_CallSurveyAnswer_CallSurveyQuestion" FromRole="CallSurveyAnswer" ToRole="CallSurveyQuestion" />
+        </EntityType>
+        <EntityType Name="CallSurveyQuestion">
+          <Key>
+            <PropertyRef Name="CallSurveyQuestionId" />
+          </Key>
+          <Property Name="CallSurveyQuestionId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CallSurveyId" Type="Int64" Nullable="false" />
+          <Property Name="CallFlowStepId" Type="Int64" Nullable="false" />
+          <Property Name="QuestionType" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="CallFlowStepGather" Relationship="Self.FK_CallSurveyQuestion_CallFlowStepGather" FromRole="CallSurveyQuestion" ToRole="CallFlowStepGather" />
+          <NavigationProperty Name="CallSurvey" Relationship="Self.FK_CallSurveyQuestion_CallSurvey" FromRole="CallSurveyQuestion" ToRole="CallSurvey" />
+          <NavigationProperty Name="CallSurveyAnswers" Relationship="Self.FK_CallSurveyAnswer_CallSurveyQuestion" FromRole="CallSurveyQuestion" ToRole="CallSurveyAnswer" />
+          <NavigationProperty Name="SurveyQuestionType" Relationship="Self.FK_CallSurveyQuestion_SurveyQuestionType" FromRole="CallSurveyQuestion" ToRole="SurveyQuestionType" />
+        </EntityType>
+        <EntityType Name="CallToPhoneAddress">
+          <Key>
+            <PropertyRef Name="CallToPhoneAddressId" />
+          </Key>
+          <Property Name="CallToPhoneAddressId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CallSId" Type="String" MaxLength="34" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="CallPhoneAddressId" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="Call" Relationship="Self.FK_CallToPhoneAddress_Call" FromRole="CallToPhoneAddress" ToRole="Call" />
+          <NavigationProperty Name="CallPhoneAddress" Relationship="Self.FK_CallToPhoneAddress_CallPhoneAddress" FromRole="CallToPhoneAddress" ToRole="CallPhoneAddress" />
+        </EntityType>
+        <EntityType Name="Client">
+          <Key>
+            <PropertyRef Name="ClientId" />
+          </Key>
+          <Property Name="ClientId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientName" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="CallFlows" Relationship="Self.FK_CallFlow_Client" FromRole="Client" ToRole="CallFlow" />
+          <NavigationProperty Name="CallSurveys" Relationship="Self.FK_CallSurvey_Client" FromRole="Client" ToRole="CallSurvey" />
+          <NavigationProperty Name="ClientLocations" Relationship="Self.FK_ClientLocation_Client" FromRole="Client" ToRole="ClientLocation" />
+          <NavigationProperty Name="ClientUsers" Relationship="Self.FK_ClientUser_Client" FromRole="Client" ToRole="ClientUser" />
+        </EntityType>
+        <EntityType Name="ClientLocation">
+          <Key>
+            <PropertyRef Name="ClientLocationId" />
+          </Key>
+          <Property Name="ClientLocationId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientId" Type="Int64" Nullable="false" />
+          <Property Name="LocationName" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Appointments" Relationship="Self.FK_Appointment_ClientLocation" FromRole="ClientLocation" ToRole="Appointment" />
+          <NavigationProperty Name="Client" Relationship="Self.FK_ClientLocation_Client" FromRole="ClientLocation" ToRole="Client" />
+          <NavigationProperty Name="ConsultantSchedules" Relationship="Self.FK_ConsultantSchedule_ClientLocation" FromRole="ClientLocation" ToRole="ConsultantSchedule" />
+        </EntityType>
+        <EntityType Name="ClientUser">
+          <Key>
+            <PropertyRef Name="ClientUserId" />
+          </Key>
+          <Property Name="ClientUserId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AspNetUserId" Type="String" MaxLength="128" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="ClientId" Type="Int64" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="LastNane" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Client" Relationship="Self.FK_ClientUser_Client" FromRole="ClientUser" ToRole="Client" />
+        </EntityType>
+        <EntityType Name="Consultant">
+          <Key>
+            <PropertyRef Name="ConsultantId" />
+          </Key>
+          <Property Name="ConsultantId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientId" Type="Int64" Nullable="false" />
+          <Property Name="ConsultantName" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Appointments" Relationship="Self.FK_Appointment_Consultant" FromRole="Consultant" ToRole="Appointment" />
+          <NavigationProperty Name="ConsultantSchedules" Relationship="Self.FK_ConsultantSchedule_Consultant" FromRole="Consultant" ToRole="ConsultantSchedule" />
+          <NavigationProperty Name="SessionTimes" Relationship="Self.FK_SessionTime_Consultant" FromRole="Consultant" ToRole="SessionTime" />
+        </EntityType>
+        <EntityType Name="ConsultantSchedule">
+          <Key>
+            <PropertyRef Name="ConsultantScheduleId" />
+          </Key>
+          <Property Name="ConsultantScheduleId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ConsultantId" Type="Int64" Nullable="false" />
+          <Property Name="LocationId" Type="Int64" Nullable="false" />
+          <Property Name="DayOfWeek" Type="Int16" Nullable="false" />
+          <Property Name="StartTime" Type="Time" Nullable="false" Precision="7" />
+          <Property Name="EndTime" Type="Time" Nullable="false" Precision="7" />
+          <NavigationProperty Name="ClientLocation" Relationship="Self.FK_ConsultantSchedule_ClientLocation" FromRole="ConsultantSchedule" ToRole="ClientLocation" />
+          <NavigationProperty Name="Consultant" Relationship="Self.FK_ConsultantSchedule_Consultant" FromRole="ConsultantSchedule" ToRole="Consultant" />
+        </EntityType>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="CustomerId" />
+          </Key>
+          <Property Name="CustomerId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="EmailAddress" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Appointments" Relationship="Self.FK_Appointment_Customer" FromRole="Customer" ToRole="Appointment" />
+        </EntityType>
+        <EntityType Name="ServiceCategory">
+          <Key>
+            <PropertyRef Name="ServiceCategoryId" />
+          </Key>
+          <Property Name="ServiceCategoryId" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Appointments" Relationship="Self.FK_Appointment_ServiceCategory" FromRole="ServiceCategory" ToRole="Appointment" />
+          <NavigationProperty Name="SessionTimes" Relationship="Self.FK_SessionTime_ServiceCategory" FromRole="ServiceCategory" ToRole="SessionTime" />
+        </EntityType>
+        <EntityType Name="SessionTime">
+          <Key>
+            <PropertyRef Name="SessionTimeId" />
+          </Key>
+          <Property Name="SessionTimeId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ConsultantId" Type="Int64" Nullable="false" />
+          <Property Name="ServiceCategoryId" Type="Int16" Nullable="false" />
+          <Property Name="SessionMinutes" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="Consultant" Relationship="Self.FK_SessionTime_Consultant" FromRole="SessionTime" ToRole="Consultant" />
+          <NavigationProperty Name="ServiceCategory" Relationship="Self.FK_SessionTime_ServiceCategory" FromRole="SessionTime" ToRole="ServiceCategory" />
+        </EntityType>
+        <EntityType Name="SurveyQuestionType">
+          <Key>
+            <PropertyRef Name="SurveyQuestionTypeId" />
+          </Key>
+          <Property Name="SurveyQuestionTypeId" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SureveyQuestionTypeName" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="CallSurveyQuestions" Relationship="Self.FK_CallSurveyQuestion_SurveyQuestionType" FromRole="SurveyQuestionType" ToRole="CallSurveyQuestion" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Tollfree">
+          <Key>
+            <PropertyRef Name="TollfreeId" />
+          </Key>
+          <Property Name="TollfreeId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TollfreeNumber" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="CallFlowId" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="CallFlow" Relationship="Self.FK_Tollfree_CallFlow" FromRole="Tollfree" ToRole="CallFlow" />
+        </EntityType>
+        <Association Name="FK_Appointment_ClientLocation">
+          <End Role="ClientLocation" Type="Self.ClientLocation" Multiplicity="1" />
+          <End Role="Appointment" Type="Self.Appointment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ClientLocation">
+              <PropertyRef Name="ClientLocationId" />
+            </Principal>
+            <Dependent Role="Appointment">
+              <PropertyRef Name="LocationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Appointment_Consultant">
+          <End Role="Consultant" Type="Self.Consultant" Multiplicity="1" />
+          <End Role="Appointment" Type="Self.Appointment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Consultant">
+              <PropertyRef Name="ConsultantId" />
+            </Principal>
+            <Dependent Role="Appointment">
+              <PropertyRef Name="ConsultantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Appointment_Customer">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
+          <End Role="Appointment" Type="Self.Appointment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="Appointment">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Appointment_ServiceCategory">
+          <End Role="ServiceCategory" Type="Self.ServiceCategory" Multiplicity="1" />
+          <End Role="Appointment" Type="Self.Appointment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ServiceCategory">
+              <PropertyRef Name="ServiceCategoryId" />
+            </Principal>
+            <Dependent Role="Appointment">
+              <PropertyRef Name="ServiceCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Call_CallDirection">
+          <End Role="CallDirection" Type="Self.CallDirection" Multiplicity="1" />
+          <End Role="Call" Type="Self.Call" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CallDirection">
+              <PropertyRef Name="CallDirectionId" />
+            </Principal>
+            <Dependent Role="Call">
+              <PropertyRef Name="Direction" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallAction_Call">
+          <End Role="Call" Type="Self.Call" Multiplicity="1" />
+          <End Role="CallAction" Type="Self.CallAction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Call">
+              <PropertyRef Name="CallSid" />
+            </Principal>
+            <Dependent Role="CallAction">
+              <PropertyRef Name="CallSid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallFromPhoneAddress_Call">
+          <End Role="Call" Type="Self.Call" Multiplicity="1" />
+          <End Role="CallFromPhoneAddress" Type="Self.CallFromPhoneAddress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Call">
+              <PropertyRef Name="CallSid" />
+            </Principal>
+            <Dependent Role="CallFromPhoneAddress">
+              <PropertyRef Name="CallSid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallGather_Call">
+          <End Role="Call" Type="Self.Call" Multiplicity="1" />
+          <End Role="CallGather" Type="Self.CallGather" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Call">
+              <PropertyRef Name="CallSid" />
+            </Principal>
+            <Dependent Role="CallGather">
+              <PropertyRef Name="CallSid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallGatherAttempt_Call">
+          <End Role="Call" Type="Self.Call" Multiplicity="1" />
+          <End Role="CallGatherAttempt" Type="Self.CallGatherAttempt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Call">
+              <PropertyRef Name="CallSid" />
+            </Principal>
+            <Dependent Role="CallGatherAttempt">
+              <PropertyRef Name="CallSid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallSurveyAnswer_Call">
+          <End Role="Call" Type="Self.Call" Multiplicity="1" />
+          <End Role="CallSurveyAnswer" Type="Self.CallSurveyAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Call">
+              <PropertyRef Name="CallSid" />
+            </Principal>
+            <Dependent Role="CallSurveyAnswer">
+              <PropertyRef Name="CallSid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallToPhoneAddress_Call">
+          <End Role="Call" Type="Self.Call" Multiplicity="1" />
+          <End Role="CallToPhoneAddress" Type="Self.CallToPhoneAddress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Call">
+              <PropertyRef Name="CallSid" />
+            </Principal>
+            <Dependent Role="CallToPhoneAddress">
+              <PropertyRef Name="CallSId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallFlow_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="CallFlow" Type="Self.CallFlow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="CallFlow">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallFlowStep_CallFlow">
+          <End Role="CallFlow" Type="Self.CallFlow" Multiplicity="1" />
+          <End Role="CallFlowStep" Type="Self.CallFlowStep" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CallFlow">
+              <PropertyRef Name="CallFlowId" />
+            </Principal>
+            <Dependent Role="CallFlowStep">
+              <PropertyRef Name="CallFlowId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tollfree_CallFlow">
+          <End Role="CallFlow" Type="Self.CallFlow" Multiplicity="1" />
+          <End Role="Tollfree" Type="Self.Tollfree" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CallFlow">
+              <PropertyRef Name="CallFlowId" />
+            </Principal>
+            <Dependent Role="Tollfree">
+              <PropertyRef Name="CallFlowId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallFlowStep_CallFlowStepType">
+          <End Role="CallFlowStepType" Type="Self.CallFlowStepType" Multiplicity="1" />
+          <End Role="CallFlowStep" Type="Self.CallFlowStep" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CallFlowStepType">
+              <PropertyRef Name="CallFlowStepTypeId" />
+            </Principal>
+            <Dependent Role="CallFlowStep">
+              <PropertyRef Name="CallFlowStepType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallFlowStepDial_CallFlowStep">
+          <End Role="CallFlowStep" Type="Self.CallFlowStep" Multiplicity="1" />
+          <End Role="CallFlowStepDial" Type="Self.CallFlowStepDial" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="CallFlowStep">
+              <PropertyRef Name="CallFlowStepId" />
+            </Principal>
+            <Dependent Role="CallFlowStepDial">
+              <PropertyRef Name="CallFlowStepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallFlowStepGather_CallFlowStep">
+          <End Role="CallFlowStep" Type="Self.CallFlowStep" Multiplicity="1" />
+          <End Role="CallFlowStepGather" Type="Self.CallFlowStepGather" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="CallFlowStep">
+              <PropertyRef Name="CallFlowStepId" />
+            </Principal>
+            <Dependent Role="CallFlowStepGather">
+              <PropertyRef Name="CallFlowStepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallFlowStepGatherRetry_CallFlowStep">
+          <End Role="CallFlowStep" Type="Self.CallFlowStep" Multiplicity="1" />
+          <End Role="CallFlowStepGatherRetry" Type="Self.CallFlowStepGatherRetry" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CallFlowStep">
+              <PropertyRef Name="CallFlowStepId" />
+            </Principal>
+            <Dependent Role="CallFlowStepGatherRetry">
+              <PropertyRef Name="FailCallFlowStepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallFlowStepOption_CallFlowStep">
+          <End Role="CallFlowStep" Type="Self.CallFlowStep" Multiplicity="1" />
+          <End Role="CallFlowStepOption" Type="Self.CallFlowStepOption" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CallFlowStep">
+              <PropertyRef Name="CallFlowStepId" />
+            </Principal>
+            <Dependent Role="CallFlowStepOption">
+              <PropertyRef Name="NextCallFlowStepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallFlowStepSay_CallFlowStep">
+          <End Role="CallFlowStep" Type="Self.CallFlowStep" Multiplicity="1" />
+          <End Role="CallFlowStepSay" Type="Self.CallFlowStepSay" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="CallFlowStep">
+              <PropertyRef Name="CallFlowStepId" />
+            </Principal>
+            <Dependent Role="CallFlowStepSay">
+              <PropertyRef Name="CallFlowStepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallGather_CallFlowStep">
+          <End Role="CallFlowStep" Type="Self.CallFlowStep" Multiplicity="1" />
+          <End Role="CallGather" Type="Self.CallGather" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CallFlowStep">
+              <PropertyRef Name="CallFlowStepId" />
+            </Principal>
+            <Dependent Role="CallGather">
+              <PropertyRef Name="CallFlowStepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallFlowStepGatherRetry_CallFlowStepGather">
+          <End Role="CallFlowStepGather" Type="Self.CallFlowStepGather" Multiplicity="1" />
+          <End Role="CallFlowStepGatherRetry" Type="Self.CallFlowStepGatherRetry" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="CallFlowStepGather">
+              <PropertyRef Name="CallFlowStepId" />
+            </Principal>
+            <Dependent Role="CallFlowStepGatherRetry">
+              <PropertyRef Name="CallFlowStepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallFlowStepOption_CallFlowStepGather">
+          <End Role="CallFlowStepGather" Type="Self.CallFlowStepGather" Multiplicity="1" />
+          <End Role="CallFlowStepOption" Type="Self.CallFlowStepOption" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CallFlowStepGather">
+              <PropertyRef Name="CallFlowStepId" />
+            </Principal>
+            <Dependent Role="CallFlowStepOption">
+              <PropertyRef Name="CallFlowStepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallGatherAttempt_CallFlowStepGather">
+          <End Role="CallFlowStepGather" Type="Self.CallFlowStepGather" Multiplicity="1" />
+          <End Role="CallGatherAttempt" Type="Self.CallGatherAttempt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CallFlowStepGather">
+              <PropertyRef Name="CallFlowStepId" />
+            </Principal>
+            <Dependent Role="CallGatherAttempt">
+              <PropertyRef Name="CallFlowStepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallSurveyQuestion_CallFlowStepGather">
+          <End Role="CallFlowStepGather" Type="Self.CallFlowStepGather" Multiplicity="1" />
+          <End Role="CallSurveyQuestion" Type="Self.CallSurveyQuestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CallFlowStepGather">
+              <PropertyRef Name="CallFlowStepId" />
+            </Principal>
+            <Dependent Role="CallSurveyQuestion">
+              <PropertyRef Name="CallFlowStepId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallFromPhoneAddress_CallPhoneAddress">
+          <End Role="CallPhoneAddress" Type="Self.CallPhoneAddress" Multiplicity="1" />
+          <End Role="CallFromPhoneAddress" Type="Self.CallFromPhoneAddress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CallPhoneAddress">
+              <PropertyRef Name="CallPhoneAddressId" />
+            </Principal>
+            <Dependent Role="CallFromPhoneAddress">
+              <PropertyRef Name="CallPhoneAddressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallToPhoneAddress_CallPhoneAddress">
+          <End Role="CallPhoneAddress" Type="Self.CallPhoneAddress" Multiplicity="1" />
+          <End Role="CallToPhoneAddress" Type="Self.CallToPhoneAddress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CallPhoneAddress">
+              <PropertyRef Name="CallPhoneAddressId" />
+            </Principal>
+            <Dependent Role="CallToPhoneAddress">
+              <PropertyRef Name="CallPhoneAddressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallSurvey_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="CallSurvey" Type="Self.CallSurvey" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="CallSurvey">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallSurveyQuestion_CallSurvey">
+          <End Role="CallSurvey" Type="Self.CallSurvey" Multiplicity="1" />
+          <End Role="CallSurveyQuestion" Type="Self.CallSurveyQuestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CallSurvey">
+              <PropertyRef Name="CallSurveyId" />
+            </Principal>
+            <Dependent Role="CallSurveyQuestion">
+              <PropertyRef Name="CallSurveyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallSurveyAnswer_CallSurveyQuestion">
+          <End Role="CallSurveyQuestion" Type="Self.CallSurveyQuestion" Multiplicity="1" />
+          <End Role="CallSurveyAnswer" Type="Self.CallSurveyAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CallSurveyQuestion">
+              <PropertyRef Name="CallSurveyQuestionId" />
+            </Principal>
+            <Dependent Role="CallSurveyAnswer">
+              <PropertyRef Name="CallSurveyQuestionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CallSurveyQuestion_SurveyQuestionType">
+          <End Role="SurveyQuestionType" Type="Self.SurveyQuestionType" Multiplicity="1" />
+          <End Role="CallSurveyQuestion" Type="Self.CallSurveyQuestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SurveyQuestionType">
+              <PropertyRef Name="SurveyQuestionTypeId" />
+            </Principal>
+            <Dependent Role="CallSurveyQuestion">
+              <PropertyRef Name="QuestionType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ClientLocation_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="ClientLocation" Type="Self.ClientLocation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="ClientLocation">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ClientUser_Client">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="ClientUser" Type="Self.ClientUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="ClientUser">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ConsultantSchedule_ClientLocation">
+          <End Role="ClientLocation" Type="Self.ClientLocation" Multiplicity="1" />
+          <End Role="ConsultantSchedule" Type="Self.ConsultantSchedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ClientLocation">
+              <PropertyRef Name="ClientLocationId" />
+            </Principal>
+            <Dependent Role="ConsultantSchedule">
+              <PropertyRef Name="LocationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ConsultantSchedule_Consultant">
+          <End Role="Consultant" Type="Self.Consultant" Multiplicity="1" />
+          <End Role="ConsultantSchedule" Type="Self.ConsultantSchedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Consultant">
+              <PropertyRef Name="ConsultantId" />
+            </Principal>
+            <Dependent Role="ConsultantSchedule">
+              <PropertyRef Name="ConsultantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SessionTime_Consultant">
+          <End Role="Consultant" Type="Self.Consultant" Multiplicity="1" />
+          <End Role="SessionTime" Type="Self.SessionTime" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Consultant">
+              <PropertyRef Name="ConsultantId" />
+            </Principal>
+            <Dependent Role="SessionTime">
+              <PropertyRef Name="ConsultantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SessionTime_ServiceCategory">
+          <End Role="ServiceCategory" Type="Self.ServiceCategory" Multiplicity="1" />
+          <End Role="SessionTime" Type="Self.SessionTime" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ServiceCategory">
+              <PropertyRef Name="ServiceCategoryId" />
+            </Principal>
+            <Dependent Role="SessionTime">
+              <PropertyRef Name="ServiceCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CallTraxEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Appointments" EntityType="Self.Appointment" />
+          <EntitySet Name="Calls" EntityType="Self.Call" />
+          <EntitySet Name="CallActions" EntityType="Self.CallAction" />
+          <EntitySet Name="CallDirections" EntityType="Self.CallDirection" />
+          <EntitySet Name="CallFlows" EntityType="Self.CallFlow" />
+          <EntitySet Name="CallFlowSteps" EntityType="Self.CallFlowStep" />
+          <EntitySet Name="CallFlowStepDials" EntityType="Self.CallFlowStepDial" />
+          <EntitySet Name="CallFlowStepGathers" EntityType="Self.CallFlowStepGather" />
+          <EntitySet Name="CallFlowStepGatherRetries" EntityType="Self.CallFlowStepGatherRetry" />
+          <EntitySet Name="CallFlowStepOptions" EntityType="Self.CallFlowStepOption" />
+          <EntitySet Name="CallFlowStepSays" EntityType="Self.CallFlowStepSay" />
+          <EntitySet Name="CallFlowStepTypes" EntityType="Self.CallFlowStepType" />
+          <EntitySet Name="CallFromPhoneAddresses" EntityType="Self.CallFromPhoneAddress" />
+          <EntitySet Name="CallGathers" EntityType="Self.CallGather" />
+          <EntitySet Name="CallGatherAttempts" EntityType="Self.CallGatherAttempt" />
+          <EntitySet Name="CallPhoneAddresses" EntityType="Self.CallPhoneAddress" />
+          <EntitySet Name="CallSurveys" EntityType="Self.CallSurvey" />
+          <EntitySet Name="CallSurveyAnswers" EntityType="Self.CallSurveyAnswer" />
+          <EntitySet Name="CallSurveyQuestions" EntityType="Self.CallSurveyQuestion" />
+          <EntitySet Name="CallToPhoneAddresses" EntityType="Self.CallToPhoneAddress" />
+          <EntitySet Name="Clients" EntityType="Self.Client" />
+          <EntitySet Name="ClientLocations" EntityType="Self.ClientLocation" />
+          <EntitySet Name="ClientUsers" EntityType="Self.ClientUser" />
+          <EntitySet Name="Consultants" EntityType="Self.Consultant" />
+          <EntitySet Name="ConsultantSchedules" EntityType="Self.ConsultantSchedule" />
+          <EntitySet Name="Customers" EntityType="Self.Customer" />
+          <EntitySet Name="ServiceCategories" EntityType="Self.ServiceCategory" />
+          <EntitySet Name="SessionTimes" EntityType="Self.SessionTime" />
+          <EntitySet Name="SurveyQuestionTypes" EntityType="Self.SurveyQuestionType" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <EntitySet Name="Tollfrees" EntityType="Self.Tollfree" />
+          <AssociationSet Name="FK_Appointment_ClientLocation" Association="Self.FK_Appointment_ClientLocation">
+            <End Role="ClientLocation" EntitySet="ClientLocations" />
+            <End Role="Appointment" EntitySet="Appointments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Appointment_Consultant" Association="Self.FK_Appointment_Consultant">
+            <End Role="Consultant" EntitySet="Consultants" />
+            <End Role="Appointment" EntitySet="Appointments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Appointment_Customer" Association="Self.FK_Appointment_Customer">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="Appointment" EntitySet="Appointments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Appointment_ServiceCategory" Association="Self.FK_Appointment_ServiceCategory">
+            <End Role="ServiceCategory" EntitySet="ServiceCategories" />
+            <End Role="Appointment" EntitySet="Appointments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Call_CallDirection" Association="Self.FK_Call_CallDirection">
+            <End Role="CallDirection" EntitySet="CallDirections" />
+            <End Role="Call" EntitySet="Calls" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallAction_Call" Association="Self.FK_CallAction_Call">
+            <End Role="Call" EntitySet="Calls" />
+            <End Role="CallAction" EntitySet="CallActions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallFromPhoneAddress_Call" Association="Self.FK_CallFromPhoneAddress_Call">
+            <End Role="Call" EntitySet="Calls" />
+            <End Role="CallFromPhoneAddress" EntitySet="CallFromPhoneAddresses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallGather_Call" Association="Self.FK_CallGather_Call">
+            <End Role="Call" EntitySet="Calls" />
+            <End Role="CallGather" EntitySet="CallGathers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallGatherAttempt_Call" Association="Self.FK_CallGatherAttempt_Call">
+            <End Role="Call" EntitySet="Calls" />
+            <End Role="CallGatherAttempt" EntitySet="CallGatherAttempts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallSurveyAnswer_Call" Association="Self.FK_CallSurveyAnswer_Call">
+            <End Role="Call" EntitySet="Calls" />
+            <End Role="CallSurveyAnswer" EntitySet="CallSurveyAnswers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallToPhoneAddress_Call" Association="Self.FK_CallToPhoneAddress_Call">
+            <End Role="Call" EntitySet="Calls" />
+            <End Role="CallToPhoneAddress" EntitySet="CallToPhoneAddresses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallFlow_Client" Association="Self.FK_CallFlow_Client">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="CallFlow" EntitySet="CallFlows" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallFlowStep_CallFlow" Association="Self.FK_CallFlowStep_CallFlow">
+            <End Role="CallFlow" EntitySet="CallFlows" />
+            <End Role="CallFlowStep" EntitySet="CallFlowSteps" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tollfree_CallFlow" Association="Self.FK_Tollfree_CallFlow">
+            <End Role="CallFlow" EntitySet="CallFlows" />
+            <End Role="Tollfree" EntitySet="Tollfrees" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallFlowStep_CallFlowStepType" Association="Self.FK_CallFlowStep_CallFlowStepType">
+            <End Role="CallFlowStepType" EntitySet="CallFlowStepTypes" />
+            <End Role="CallFlowStep" EntitySet="CallFlowSteps" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallFlowStepDial_CallFlowStep" Association="Self.FK_CallFlowStepDial_CallFlowStep">
+            <End Role="CallFlowStep" EntitySet="CallFlowSteps" />
+            <End Role="CallFlowStepDial" EntitySet="CallFlowStepDials" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallFlowStepGather_CallFlowStep" Association="Self.FK_CallFlowStepGather_CallFlowStep">
+            <End Role="CallFlowStep" EntitySet="CallFlowSteps" />
+            <End Role="CallFlowStepGather" EntitySet="CallFlowStepGathers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallFlowStepGatherRetry_CallFlowStep" Association="Self.FK_CallFlowStepGatherRetry_CallFlowStep">
+            <End Role="CallFlowStep" EntitySet="CallFlowSteps" />
+            <End Role="CallFlowStepGatherRetry" EntitySet="CallFlowStepGatherRetries" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallFlowStepOption_CallFlowStep" Association="Self.FK_CallFlowStepOption_CallFlowStep">
+            <End Role="CallFlowStep" EntitySet="CallFlowSteps" />
+            <End Role="CallFlowStepOption" EntitySet="CallFlowStepOptions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallFlowStepSay_CallFlowStep" Association="Self.FK_CallFlowStepSay_CallFlowStep">
+            <End Role="CallFlowStep" EntitySet="CallFlowSteps" />
+            <End Role="CallFlowStepSay" EntitySet="CallFlowStepSays" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallGather_CallFlowStep" Association="Self.FK_CallGather_CallFlowStep">
+            <End Role="CallFlowStep" EntitySet="CallFlowSteps" />
+            <End Role="CallGather" EntitySet="CallGathers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallFlowStepGatherRetry_CallFlowStepGather" Association="Self.FK_CallFlowStepGatherRetry_CallFlowStepGather">
+            <End Role="CallFlowStepGather" EntitySet="CallFlowStepGathers" />
+            <End Role="CallFlowStepGatherRetry" EntitySet="CallFlowStepGatherRetries" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallFlowStepOption_CallFlowStepGather" Association="Self.FK_CallFlowStepOption_CallFlowStepGather">
+            <End Role="CallFlowStepGather" EntitySet="CallFlowStepGathers" />
+            <End Role="CallFlowStepOption" EntitySet="CallFlowStepOptions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallGatherAttempt_CallFlowStepGather" Association="Self.FK_CallGatherAttempt_CallFlowStepGather">
+            <End Role="CallFlowStepGather" EntitySet="CallFlowStepGathers" />
+            <End Role="CallGatherAttempt" EntitySet="CallGatherAttempts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallSurveyQuestion_CallFlowStepGather" Association="Self.FK_CallSurveyQuestion_CallFlowStepGather">
+            <End Role="CallFlowStepGather" EntitySet="CallFlowStepGathers" />
+            <End Role="CallSurveyQuestion" EntitySet="CallSurveyQuestions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallFromPhoneAddress_CallPhoneAddress" Association="Self.FK_CallFromPhoneAddress_CallPhoneAddress">
+            <End Role="CallPhoneAddress" EntitySet="CallPhoneAddresses" />
+            <End Role="CallFromPhoneAddress" EntitySet="CallFromPhoneAddresses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallToPhoneAddress_CallPhoneAddress" Association="Self.FK_CallToPhoneAddress_CallPhoneAddress">
+            <End Role="CallPhoneAddress" EntitySet="CallPhoneAddresses" />
+            <End Role="CallToPhoneAddress" EntitySet="CallToPhoneAddresses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallSurvey_Client" Association="Self.FK_CallSurvey_Client">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="CallSurvey" EntitySet="CallSurveys" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallSurveyQuestion_CallSurvey" Association="Self.FK_CallSurveyQuestion_CallSurvey">
+            <End Role="CallSurvey" EntitySet="CallSurveys" />
+            <End Role="CallSurveyQuestion" EntitySet="CallSurveyQuestions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallSurveyAnswer_CallSurveyQuestion" Association="Self.FK_CallSurveyAnswer_CallSurveyQuestion">
+            <End Role="CallSurveyQuestion" EntitySet="CallSurveyQuestions" />
+            <End Role="CallSurveyAnswer" EntitySet="CallSurveyAnswers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CallSurveyQuestion_SurveyQuestionType" Association="Self.FK_CallSurveyQuestion_SurveyQuestionType">
+            <End Role="SurveyQuestionType" EntitySet="SurveyQuestionTypes" />
+            <End Role="CallSurveyQuestion" EntitySet="CallSurveyQuestions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ClientLocation_Client" Association="Self.FK_ClientLocation_Client">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="ClientLocation" EntitySet="ClientLocations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ClientUser_Client" Association="Self.FK_ClientUser_Client">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="ClientUser" EntitySet="ClientUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ConsultantSchedule_ClientLocation" Association="Self.FK_ConsultantSchedule_ClientLocation">
+            <End Role="ClientLocation" EntitySet="ClientLocations" />
+            <End Role="ConsultantSchedule" EntitySet="ConsultantSchedules" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ConsultantSchedule_Consultant" Association="Self.FK_ConsultantSchedule_Consultant">
+            <End Role="Consultant" EntitySet="Consultants" />
+            <End Role="ConsultantSchedule" EntitySet="ConsultantSchedules" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SessionTime_Consultant" Association="Self.FK_SessionTime_Consultant">
+            <End Role="Consultant" EntitySet="Consultants" />
+            <End Role="SessionTime" EntitySet="SessionTimes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SessionTime_ServiceCategory" Association="Self.FK_SessionTime_ServiceCategory">
+            <End Role="ServiceCategory" EntitySet="ServiceCategories" />
+            <End Role="SessionTime" EntitySet="SessionTimes" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CallTraxModelStoreContainer" CdmEntityContainer="CallTraxEntities">
+          <EntitySetMapping Name="Appointments">
+            <EntityTypeMapping TypeName="CallTraxModel.Appointment">
+              <MappingFragment StoreEntitySet="Appointment">
+                <ScalarProperty Name="AppointmentId" ColumnName="AppointmentId" />
+                <ScalarProperty Name="StartDateTime" ColumnName="StartDateTime" />
+                <ScalarProperty Name="EndDateTime" ColumnName="EndDateTime" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="ServiceCategoryId" ColumnName="ServiceCategoryId" />
+                <ScalarProperty Name="LocationId" ColumnName="LocationId" />
+                <ScalarProperty Name="ConsultantId" ColumnName="ConsultantId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Calls">
+            <EntityTypeMapping TypeName="CallTraxModel.Call">
+              <MappingFragment StoreEntitySet="Call">
+                <ScalarProperty Name="CallSid" ColumnName="CallSid" />
+                <ScalarProperty Name="DateTimeReceived" ColumnName="DateTimeReceived" />
+                <ScalarProperty Name="CallFlowId" ColumnName="CallFlowId" />
+                <ScalarProperty Name="AccountSid" ColumnName="AccountSid" />
+                <ScalarProperty Name="FromPhoneNumber" ColumnName="FromPhoneNumber" />
+                <ScalarProperty Name="ToPhoneNUmber" ColumnName="ToPhoneNUmber" />
+                <ScalarProperty Name="CallStatus" ColumnName="CallStatus" />
+                <ScalarProperty Name="Direction" ColumnName="Direction" />
+                <ScalarProperty Name="ApiVersion" ColumnName="ApiVersion" />
+                <ScalarProperty Name="ForwardedFrom" ColumnName="ForwardedFrom" />
+                <ScalarProperty Name="CallerName" ColumnName="CallerName" />
+                <ScalarProperty Name="ParentCallSid" ColumnName="ParentCallSid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CallActions">
+            <EntityTypeMapping TypeName="CallTraxModel.CallAction">
+              <MappingFragment StoreEntitySet="CallAction">
+                <ScalarProperty Name="CallActionId" ColumnName="CallActionId" />
+                <ScalarProperty Name="ActionDateTime" ColumnName="ActionDateTime" />
+                <ScalarProperty Name="CallSid" ColumnName="CallSid" />
+                <ScalarProperty Name="ActionDescription" ColumnName="ActionDescription" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CallDirections">
+            <EntityTypeMapping TypeName="CallTraxModel.CallDirection">
+              <MappingFragment StoreEntitySet="CallDirection">
+                <ScalarProperty Name="CallDirectionId" ColumnName="CallDirectionId" />
+                <ScalarProperty Name="CallDirectionName" ColumnName="CallDirectionName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CallFlows">
+            <EntityTypeMapping TypeName="CallTraxModel.CallFlow">
+              <MappingFragment StoreEntitySet="CallFlow">
+                <ScalarProperty Name="CallFlowId" ColumnName="CallFlowId" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="FlowName" ColumnName="FlowName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CallFlowSteps">
+            <EntityTypeMapping TypeName="CallTraxModel.CallFlowStep">
+              <MappingFragment StoreEntitySet="CallFlowStep">
+                <ScalarProperty Name="CallFlowStepId" ColumnName="CallFlowStepId" />
+                <ScalarProperty Name="CallFlowId" ColumnName="CallFlowId" />
+                <ScalarProperty Name="CallFlowStepType" ColumnName="CallFlowStepType" />
+                <ScalarProperty Name="IsWelcomeStep" ColumnName="IsWelcomeStep" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CallFlowStepDials">
+            <EntityTypeMapping TypeName="CallTraxModel.CallFlowStepDial">
+              <MappingFragment StoreEntitySet="CallFlowStepDial">
+                <ScalarProperty Name="CallFlowStepId" ColumnName="CallFlowStepId" />
+                <ScalarProperty Name="DialPhoneNumber" ColumnName="DialPhoneNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CallFlowStepGathers">
+            <EntityTypeMapping TypeName="CallTraxModel.CallFlowStepGather">
+              <MappingFragment StoreEntitySet="CallFlowStepGather">
+                <ScalarProperty Name="CallFlowStepId" ColumnName="CallFlowStepId" />
+                <ScalarProperty Name="GatherName" ColumnName="GatherName" />
+                <ScalarProperty Name="Attempts" ColumnName="Attempts" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CallFlowStepGatherRetries">
+            <EntityTypeMapping TypeName="CallTraxModel.CallFlowStepGatherRetry">
+              <MappingFragment StoreEntitySet="CallFlowStepGatherRetry">
+                <ScalarProperty Name="CallFlowStepId" ColumnName="CallFlowStepId" />
+                <ScalarProperty Name="RetrySay" ColumnName="RetrySay" />
+                <ScalarProperty Name="FailCallFlowStepId" ColumnName="FailCallFlowStepId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CallFlowStepOptions">
+            <EntityTypeMapping TypeName="CallTraxModel.CallFlowStepOption">
+              <MappingFragment StoreEntitySet="CallFlowStepOption">
+                <ScalarProperty Name="CallFlowStepOptionId" ColumnName="CallFlowStepOptionId" />
+                <ScalarProperty Name="CallFlowStepId" ColumnName="CallFlowStepId" />
+                <ScalarProperty Name="OptionDescription" ColumnName="OptionDescription" />
+                <ScalarProperty Name="OptionValue" ColumnName="OptionValue" />
+                <ScalarProperty Name="NextCallFlowStepId" ColumnName="NextCallFlowStepId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CallFlowStepSays">
+            <EntityTypeMapping TypeName="CallTraxModel.CallFlowStepSay">
+              <MappingFragment StoreEntitySet="CallFlowStepSay">
+                <ScalarProperty Name="CallFlowStepId" ColumnName="CallFlowStepId" />
+                <ScalarProperty Name="SayText" ColumnName="SayText" />
+                <ScalarProperty Name="Language" ColumnName="Language" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CallFlowStepTypes">
+            <EntityTypeMapping TypeName="CallTraxModel.CallFlowStepType">
+              <MappingFragment StoreEntitySet="CallFlowStepType">
+                <ScalarProperty Name="CallFlowStepTypeId" ColumnName="CallFlowStepTypeId" />
+                <ScalarProperty Name="StepTypeName" ColumnName="StepTypeName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CallFromPhoneAddresses">
+            <EntityTypeMapping TypeName="CallTraxModel.CallFromPhoneAddress">
+              <MappingFragment StoreEntitySet="CallFromPhoneAddress">
+                <ScalarProperty Name="CallFromPhoneAddressId" ColumnName="CallFromPhoneAddressId" />
+                <ScalarProperty Name="CallSid" ColumnName="CallSid" />
+                <ScalarProperty Name="CallPhoneAddressId" ColumnName="CallPhoneAddressId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CallGathers">
+            <EntityTypeMapping TypeName="CallTraxModel.CallGather">
+              <MappingFragment StoreEntitySet="CallGather">
+                <ScalarProperty Name="CallGatherId" ColumnName="CallGatherId" />
+                <ScalarProperty Name="CallSid" ColumnName="CallSid" />
+                <ScalarProperty Name="CallFlowStepId" ColumnName="CallFlowStepId" />
+                <ScalarProperty Name="GatherValue" ColumnName="GatherValue" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CallGatherAttempts">
+            <EntityTypeMapping TypeName="CallTraxModel.CallGatherAttempt">
+              <MappingFragment StoreEntitySet="CallGatherAttempt">
+                <ScalarProperty Name="CallGatherAttemptId" ColumnName="CallGatherAttemptId" />
+                <ScalarProperty Name="CallSid" ColumnName="CallSid" />
+                <ScalarProperty Name="CallFlowStepId" ColumnName="CallFlowStepId" />
+                <ScalarProperty Name="Attempts" ColumnName="Attempts" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CallPhoneAddresses">
+            <EntityTypeMapping TypeName="CallTraxModel.CallPhoneAddress">
+              <MappingFragment StoreEntitySet="CallPhoneAddress">
+                <ScalarProperty Name="CallPhoneAddressId" ColumnName="CallPhoneAddressId" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="Zip" ColumnName="Zip" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CallSurveys">
+            <EntityTypeMapping TypeName="CallTraxModel.CallSurvey">
+              <MappingFragment StoreEntitySet="CallSurvey">
+                <ScalarProperty Name="CallSurveyId" ColumnName="CallSurveyId" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="CallSurveyName" ColumnName="CallSurveyName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CallSurveyAnswers">
+            <EntityTypeMapping TypeName="CallTraxModel.CallSurveyAnswer">
+              <MappingFragment StoreEntitySet="CallSurveyAnswer">
+                <ScalarProperty Name="CallSurveyAnswerId" ColumnName="CallSurveyAnswerId" />
+                <ScalarProperty Name="CallSid" ColumnName="CallSid" />
+                <ScalarProperty Name="CallSurveyQuestionId" ColumnName="CallSurveyQuestionId" />
+                <ScalarProperty Name="SurveyAnswer" ColumnName="SurveyAnswer" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CallSurveyQuestions">
+            <EntityTypeMapping TypeName="CallTraxModel.CallSurveyQuestion">
+              <MappingFragment StoreEntitySet="CallSurveyQuestion">
+                <ScalarProperty Name="CallSurveyQuestionId" ColumnName="CallSurveyQuestionId" />
+                <ScalarProperty Name="CallSurveyId" ColumnName="CallSurveyId" />
+                <ScalarProperty Name="CallFlowStepId" ColumnName="CallFlowStepId" />
+                <ScalarProperty Name="QuestionType" ColumnName="QuestionType" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CallToPhoneAddresses">
+            <EntityTypeMapping TypeName="CallTraxModel.CallToPhoneAddress">
+              <MappingFragment StoreEntitySet="CallToPhoneAddress">
+                <ScalarProperty Name="CallToPhoneAddressId" ColumnName="CallToPhoneAddressId" />
+                <ScalarProperty Name="CallSId" ColumnName="CallSId" />
+                <ScalarProperty Name="CallPhoneAddressId" ColumnName="CallPhoneAddressId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Clients">
+            <EntityTypeMapping TypeName="CallTraxModel.Client">
+              <MappingFragment StoreEntitySet="Client">
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="ClientName" ColumnName="ClientName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ClientLocations">
+            <EntityTypeMapping TypeName="CallTraxModel.ClientLocation">
+              <MappingFragment StoreEntitySet="ClientLocation">
+                <ScalarProperty Name="ClientLocationId" ColumnName="ClientLocationId" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="LocationName" ColumnName="LocationName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ClientUsers">
+            <EntityTypeMapping TypeName="CallTraxModel.ClientUser">
+              <MappingFragment StoreEntitySet="ClientUser">
+                <ScalarProperty Name="ClientUserId" ColumnName="ClientUserId" />
+                <ScalarProperty Name="AspNetUserId" ColumnName="AspNetUserId" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastNane" ColumnName="LastNane" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Consultants">
+            <EntityTypeMapping TypeName="CallTraxModel.Consultant">
+              <MappingFragment StoreEntitySet="Consultant">
+                <ScalarProperty Name="ConsultantId" ColumnName="ConsultantId" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="ConsultantName" ColumnName="ConsultantName" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ConsultantSchedules">
+            <EntityTypeMapping TypeName="CallTraxModel.ConsultantSchedule">
+              <MappingFragment StoreEntitySet="ConsultantSchedule">
+                <ScalarProperty Name="ConsultantScheduleId" ColumnName="ConsultantScheduleId" />
+                <ScalarProperty Name="ConsultantId" ColumnName="ConsultantId" />
+                <ScalarProperty Name="LocationId" ColumnName="LocationId" />
+                <ScalarProperty Name="DayOfWeek" ColumnName="DayOfWeek" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Customers">
+            <EntityTypeMapping TypeName="CallTraxModel.Customer">
+              <MappingFragment StoreEntitySet="Customer">
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ServiceCategories">
+            <EntityTypeMapping TypeName="CallTraxModel.ServiceCategory">
+              <MappingFragment StoreEntitySet="ServiceCategory">
+                <ScalarProperty Name="ServiceCategoryId" ColumnName="ServiceCategoryId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SessionTimes">
+            <EntityTypeMapping TypeName="CallTraxModel.SessionTime">
+              <MappingFragment StoreEntitySet="SessionTime">
+                <ScalarProperty Name="SessionTimeId" ColumnName="SessionTimeId" />
+                <ScalarProperty Name="ConsultantId" ColumnName="ConsultantId" />
+                <ScalarProperty Name="ServiceCategoryId" ColumnName="ServiceCategoryId" />
+                <ScalarProperty Name="SessionMinutes" ColumnName="SessionMinutes" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SurveyQuestionTypes">
+            <EntityTypeMapping TypeName="CallTraxModel.SurveyQuestionType">
+              <MappingFragment StoreEntitySet="SurveyQuestionType">
+                <ScalarProperty Name="SurveyQuestionTypeId" ColumnName="SurveyQuestionTypeId" />
+                <ScalarProperty Name="SureveyQuestionTypeName" ColumnName="SureveyQuestionTypeName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="CallTraxModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tollfrees">
+            <EntityTypeMapping TypeName="CallTraxModel.Tollfree">
+              <MappingFragment StoreEntitySet="Tollfree">
+                <ScalarProperty Name="TollfreeId" ColumnName="TollfreeId" />
+                <ScalarProperty Name="TollfreeNumber" ColumnName="TollfreeNumber" />
+                <ScalarProperty Name="CallFlowId" ColumnName="CallFlowId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
