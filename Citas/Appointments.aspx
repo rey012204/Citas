@@ -48,8 +48,12 @@
                                 Registration done Successfully</h4>
                 </div>
                 <div class="modal-body">
-                    <asp:Label ID="lblMessage" runat="server" />
-                    <input type="text" id="lblid" />
+                    <input type="text" id="lblhour" /><br />
+                    <input type="text" id="lblname" /><br />
+                    <input type="text" id="lblphone" /><br />
+                    <input type="text" id="lblconsultant" /><br />
+                    <input type="text" id="lblservice" /><br />
+                    <input type="text" id="lblnote" /><br />
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -58,7 +62,6 @@
             </div> <!-- /.modal-content -->
         </div> <!-- /.modal-dialog -->
     </div> <!-- /.modal -->  
-            <asp:Button ID="Button1" runat="server" Text="Button" OnClick="Button1_Click" />
             
     <button type="button" style="display: none;" id="btnShowPopup" class="btn btn-primary btn-lg"
                 data-toggle="modal" data-target="#myModal">
@@ -73,15 +76,22 @@
     function ShowPopup(id) {
             $.ajax({
                 type: "GET",
-                url: "Appointments.aspx/GetAppointmentData",
-                data: "{id: '" + id + "'}",
+                url: "api/appointment/" + id,
+                data: "{}",
                 contentType: "application/json; charset=utf-8",
                 async: "true",
                 cache: "false",
-                dataType: "json",
                 success: function (response) {
                     //var app = response.d;
-                    alert("Hello");
+                    console.log(response);
+                    var appt = $.parseJSON(response);
+                    $("#lblhour").val(appt.StartTime + " to " + appt.EndTime);
+                    $("#lblname").val(appt.FirstName + " " + appt.LastName);
+                    $("#lblphone").val(appt.Phone);
+                    $("#lblconsultant").val("Consultant: " + appt.Consultant);
+                    $("#lblservice").val("Service: " + appt.Service);
+                    $("#lblnote").val(appt.Note);
+                    //alert("Hello ");
                     //$("#lblid").val(msg.Customer.FirstName);
                     $("#btnShowPopup").click();   
                     //$("#Button1").click(); 
@@ -90,18 +100,6 @@
                     alert("Error: " + e.status + " " + e.statusText);
                 }
             });
-
-        //$.ajax({
-        //    url: "Appointments/GetAppointmentData",
-        //    dataType: "json",
-        //    data: data,
-        //    type: "post",
-        //    cache: false
-        //}).done(function (data) {
-        //    alert('hello');
-        //}).fail(function (XMLHttpRequest, textStatus, errorThrown) {
-        //    alert('error: ' + XMLHttpRequest.status + ": " + XMLHttpRequest.responseText + ": " + textStatus + ": " + errorThrown);
-        //});
         }
 
 

@@ -203,41 +203,7 @@ namespace Citas
         //    ClientScript.RegisterStartupScript(this.GetType(), "alert", "ShowPopup();", true);
         //    this.lblMessage.Text = "Your Registration is done successfully. Our team will contact you shotly";
         //}
-        [WebMethod]
-        public static string GetAppointmentData(string id)
-        {
-            var app = new { id = 1 };
-            string response = JsonConvert.SerializeObject(app);
-            return response;
-            
+ 
 
-            //try
-            //{
-            //    long lid;
-            //    if(long.TryParse(id, out lid))
-            //    {
-            //        using (CallTraxEntities callTraxDb = new CallTraxEntities())
-            //        {
-            //            Appointment app = callTraxDb.Appointments.Where(a => a.AppointmentId == lid).FirstOrDefault();
-            //            if(app != null)
-            //            {
-            //                return app;
-            //            }
-            //        }
-            //    }
-            //    return null;
-            //}
-            //catch (Exception)
-            //{
-            //    throw;
-            //}
-        }
-
-        protected void Button1_Click(object sender, EventArgs e)
-        {
-            string a;
-            a = "b";
-            string b = a;
-        }
     }
 }

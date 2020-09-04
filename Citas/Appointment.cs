@@ -21,6 +21,7 @@ namespace Citas
         public short ServiceCategoryId { get; set; }
         public long LocationId { get; set; }
         public long ConsultantId { get; set; }
+        public string Note { get; set; }
     
         public virtual ClientLocation ClientLocation { get; set; }
         public virtual Consultant Consultant { get; set; }

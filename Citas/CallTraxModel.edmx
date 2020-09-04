@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="CallTraxModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="CallTraxModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Appointment">
           <Key>
             <PropertyRef Name="AppointmentId" />
@@ -16,6 +16,7 @@
           <Property Name="ServiceCategoryId" Type="smallint" Nullable="false" />
           <Property Name="LocationId" Type="bigint" Nullable="false" />
           <Property Name="ConsultantId" Type="bigint" Nullable="false" />
+          <Property Name="Note" Type="nchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="Call">
           <Key>
@@ -908,8 +909,7 @@
             <End Role="Tollfree" EntitySet="Tollfree" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="CallTraxModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -928,6 +928,7 @@
           <NavigationProperty Name="Consultant" Relationship="Self.FK_Appointment_Consultant" FromRole="Appointment" ToRole="Consultant" />
           <NavigationProperty Name="Customer" Relationship="Self.FK_Appointment_Customer" FromRole="Appointment" ToRole="Customer" />
           <NavigationProperty Name="ServiceCategory" Relationship="Self.FK_Appointment_ServiceCategory" FromRole="Appointment" ToRole="ServiceCategory" />
+          <Property Name="Note" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
         </EntityType>
         <EntityType Name="Call">
           <Key>
@@ -1899,6 +1900,7 @@
           <EntitySetMapping Name="Appointments">
             <EntityTypeMapping TypeName="CallTraxModel.Appointment">
               <MappingFragment StoreEntitySet="Appointment">
+                <ScalarProperty Name="Note" ColumnName="Note" />
                 <ScalarProperty Name="AppointmentId" ColumnName="AppointmentId" />
                 <ScalarProperty Name="StartDateTime" ColumnName="StartDateTime" />
                 <ScalarProperty Name="EndDateTime" ColumnName="EndDateTime" />
