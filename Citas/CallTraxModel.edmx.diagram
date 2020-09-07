@@ -30,7 +30,6 @@
         <EntityTypeShape EntityType="CallTraxModel.ClientUser" Width="1.5" PointX="3" PointY="23" IsExpanded="true" />
         <EntityTypeShape EntityType="CallTraxModel.Consultant" Width="1.5" PointX="3" PointY="8.125" IsExpanded="true" />
         <EntityTypeShape EntityType="CallTraxModel.ConsultantSchedule" Width="1.5" PointX="8.25" PointY="19.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="CallTraxModel.Customer" Width="1.5" PointX="3" PointY="26.5" IsExpanded="true" />
         <EntityTypeShape EntityType="CallTraxModel.ServiceCategory" Width="1.5" PointX="3" PointY="29.375" IsExpanded="true" />
         <EntityTypeShape EntityType="CallTraxModel.SessionTime" Width="1.5" PointX="10.25" PointY="23.625" IsExpanded="true" />
         <EntityTypeShape EntityType="CallTraxModel.SurveyQuestionType" Width="1.5" PointX="10.5" PointY="21" IsExpanded="true" />
@@ -38,7 +37,6 @@
         <EntityTypeShape EntityType="CallTraxModel.Tollfree" Width="1.5" PointX="5.25" PointY="22.875" IsExpanded="true" />
         <AssociationConnector Association="CallTraxModel.FK_Appointment_ClientLocation" ManuallyRouted="false" />
         <AssociationConnector Association="CallTraxModel.FK_Appointment_Consultant" ManuallyRouted="false" />
-        <AssociationConnector Association="CallTraxModel.FK_Appointment_Customer" ManuallyRouted="false" />
         <AssociationConnector Association="CallTraxModel.FK_Appointment_ServiceCategory" ManuallyRouted="false" />
         <AssociationConnector Association="CallTraxModel.FK_Call_CallDirection" ManuallyRouted="false" />
         <AssociationConnector Association="CallTraxModel.FK_CallAction_Call" ManuallyRouted="false" />

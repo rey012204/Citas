@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.UI.WebControls;
 
 namespace Citas.Controllers.Api
 {
@@ -23,19 +24,33 @@ namespace Citas.Controllers.Api
             {
                 using (CallTraxEntities callTraxDb = new CallTraxEntities())
                 {
-                    Appointment app = callTraxDb.Appointments.Where(a => a.AppointmentId == id).FirstOrDefault();
-                    if(app != null)
+                    Appointment appt = callTraxDb.Appointments.Where(a => a.AppointmentId == id).FirstOrDefault();
+                    if(appt != null)
                     {
+                        List<SessionTime> sessions = callTraxDb.SessionTimes.Where(st => st.ConsultantId == appt.ConsultantId).ToList();
+                        List<object> services = new List<object>();
+                        List<object> locations = new List<object>();
+                        locations.Add(new { value = appt.ClientLocation.ClientLocationId, text = appt.ClientLocation.LocationName.Trim() });
+                        List<object> consultants = new List<object>();
+                        consultants.Add(new { value = appt.Consultant.ConsultantId, text = appt.Consultant.ConsultantName.Trim() });
+                        foreach (SessionTime session in sessions)
+                        {
+                            services.Add( new { value = session.ServiceCategory.ServiceCategoryId.ToString().Trim(), text = session.ServiceCategory.Name.Trim() });
+                        }
                         var data = new
                         {
-                            StartTime = app.StartDateTime.ToString("hh:mm tt"),
-                            EndTime = app.EndDateTime.ToString("hh:mm tt"),
-                            FirstName = app.Customer.FirstName,
-                            LastName = app.Customer.LastName,
-                            Phone = app.Customer.PhoneNumber,
-                            Consultant = app.Consultant.ConsultantName,
-                            Service = app.ServiceCategory.Name,
-                            Note = app.Note 
+                            StartTime = appt.StartDateTime.ToString("hh:mm tt"),
+                            EndTime = appt.EndDateTime.ToString("hh:mm tt"),
+                            FirstName = appt.CustomerFirstName.Trim(),
+                            LastName = appt.CustomerLastName.Trim(),
+                            Phone = appt.CustomerPhoneNumber.Trim(),
+                            LocationId = appt.ClientLocation.ClientLocationId,
+                            Locations = locations,
+                            Consultants= consultants,
+                            ConsultantId = appt.Consultant.ConsultantId,
+                            ServiceId = appt.ServiceCategory.ServiceCategoryId,
+                            Services = services,
+                            Note = appt.Note 
                         };
                         return JsonConvert.SerializeObject(data);
                     }

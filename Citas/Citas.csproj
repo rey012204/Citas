@@ -517,9 +517,6 @@
       <DependentUpon>Contact.aspx</DependentUpon>
     </Compile>
     <Compile Include="Controllers\Api\AppointmentController.cs" />
-    <Compile Include="Customer.cs">
-      <DependentUpon>CallTraxModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

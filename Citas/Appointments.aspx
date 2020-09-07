@@ -26,6 +26,7 @@
         NonBusinessHours="Hide" 
         onbeforeeventrender="DayPilotCalendar1_BeforeEventRender"
         TimeRangeSelectedHandling="JavaScript"
+        TimeRangeSelectedJavaScript="ShowPopupNew();"
         CssOnly="true"
         CssClassPrefix="calendar_traditional"
         EventMoveHandling="CallBack"
@@ -37,25 +38,80 @@
      >
     </DayPilot:DayPilotCalendar>
 
-    <div class="modal fade" id="myModal">
-
+    <div class="modal fade" id="apptPopup">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">
-                                Registration done Successfully</h4>
+                    <h4 class="modal-title">Appointment Information</h4>
                 </div>
                 <div class="modal-body">
-                    <input type="text" id="lblhour" /><br />
-                    <input type="text" id="lblname" /><br />
-                    <input type="text" id="lblphone" /><br />
-                    <input type="text" id="lblconsultant" /><br />
-                    <input type="text" id="lblservice" /><br />
-                    <input type="text" id="lblnote" /><br />
+                    <table>
+                        <tr style="padding:5px">
+                            <td>
+                                <table>
+                                    <tr>
+                                        <td>Duration:</td>
+                                        <td>
+                                            <input type="text" id="txtduration" readonly />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Location:</td>
+                                        <td>
+                                            <select name="ddllocation" id="ddllocation"></select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Consultant:</td>
+                                        <td>
+                                            <select name="ddlconsultant" id="ddlconsultant"></select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Service:</td>
+                                         <td>
+                                            <select name="ddlservice" id="ddlservice"></select>
+                                        </td>                       
+                                    </tr>
+                                    <tr>
+                                        <td>First Name:</td>
+                                        <td>
+                                            <input type="text" id="txtfirstname" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Last Name:</td>
+                                        <td>
+                                            <input type="text" id="txtlastname" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Phone No:</td>
+                                        <td>
+                                            <input type="text" id="txtphone" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td valign="top" style="padding-left:10px">
+                                <table>
+                                    <tr>
+                                        <td>Notes:</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <textarea rows = "10" cols = "38" id = "txtnote"></textarea>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
                 <div class="modal-footer">
+                    <button id="brnCancelAppointment" type="button" class="btn btn-danger pull-left" data-dismiss="modal">Cancel appointment</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button id="btnSaveAppointment" type="button" class="btn btn-primary">Save changes</button>
                 </div>
@@ -64,7 +120,7 @@
     </div> <!-- /.modal -->  
             
     <button type="button" style="display: none;" id="btnShowPopup" class="btn btn-primary btn-lg"
-                data-toggle="modal" data-target="#myModal">
+                data-toggle="modal" data-target="#apptPopup">
                 Launch demo modal
             </button>   
 
@@ -85,23 +141,39 @@
                     //var app = response.d;
                     console.log(response);
                     var appt = $.parseJSON(response);
-                    $("#lblhour").val(appt.StartTime + " to " + appt.EndTime);
-                    $("#lblname").val(appt.FirstName + " " + appt.LastName);
-                    $("#lblphone").val(appt.Phone);
-                    $("#lblconsultant").val("Consultant: " + appt.Consultant);
-                    $("#lblservice").val("Service: " + appt.Service);
-                    $("#lblnote").val(appt.Note);
-                    //alert("Hello ");
-                    //$("#lblid").val(msg.Customer.FirstName);
-                    $("#btnShowPopup").click();   
-                    //$("#Button1").click(); 
+                    $("#txtduration").val(appt.StartTime + " to " + appt.EndTime);
+                    $("#txtfirstname").val(appt.FirstName);
+                    $("#txtlastname").val(appt.LastName);
+                    $("#txtphone").val(appt.Phone);
+                    $("#txtnote").val(appt.Note);
+                    PopulateDDL($("#ddllocation"),appt.Locations, appt.LocationId);
+                    PopulateDDL($("#ddlconsultant"), appt.Consultants, appt.ConsultantId);
+                    PopulateDDL($("#ddlservice"), appt.Services, appt.ServiceId);
+                    $("#btnShowPopup").click();
                 },
                 error: function (e) {
                     alert("Error: " + e.status + " " + e.statusText);
                 }
             });
-        }
+    }
 
+    function PopulateDDL(ddl, list, id) {
+        try {
+            for (k = 0; k < list.length; k++) {
+                var s = list[k];
+                var selected = '';
+                if (s.value == id) selected = 'selected';
+                ddl.append("<option value='" + s.value + "' " + selected + ">" + s.text + "</option>");
+            }
+        }
+        catch (e) {
+            console.log("Error: " + e)
+        }
+    }
+    function ShowPopupNew(start, end) {
+        alert("ShowPopupNew: ");
+        $("#btnShowPopup").click();
+    }
 
 </script>    
 </asp:Content>

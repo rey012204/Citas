@@ -17,15 +17,17 @@ namespace Citas
         public long AppointmentId { get; set; }
         public System.DateTime StartDateTime { get; set; }
         public System.DateTime EndDateTime { get; set; }
-        public long CustomerId { get; set; }
         public short ServiceCategoryId { get; set; }
         public long LocationId { get; set; }
         public long ConsultantId { get; set; }
         public string Note { get; set; }
+        public string CustomerFirstName { get; set; }
+        public string CustomerLastName { get; set; }
+        public string CustomerPhoneNumber { get; set; }
+        public string CustomerEmail { get; set; }
     
         public virtual ClientLocation ClientLocation { get; set; }
         public virtual Consultant Consultant { get; set; }
-        public virtual Customer Customer { get; set; }
         public virtual ServiceCategory ServiceCategory { get; set; }
     }
 }

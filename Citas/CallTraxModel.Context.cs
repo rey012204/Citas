@@ -50,7 +50,6 @@ namespace Citas
         public virtual DbSet<ClientUser> ClientUsers { get; set; }
         public virtual DbSet<Consultant> Consultants { get; set; }
         public virtual DbSet<ConsultantSchedule> ConsultantSchedules { get; set; }
-        public virtual DbSet<Customer> Customers { get; set; }
         public virtual DbSet<ServiceCategory> ServiceCategories { get; set; }
         public virtual DbSet<SessionTime> SessionTimes { get; set; }
         public virtual DbSet<SurveyQuestionType> SurveyQuestionTypes { get; set; }

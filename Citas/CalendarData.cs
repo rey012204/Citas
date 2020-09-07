@@ -34,7 +34,7 @@ namespace Citas
                         dr["id"] = appointment.AppointmentId.ToString();
                         dr["start"] = appointment.StartDateTime;
                         dr["end"] = appointment.EndDateTime;
-                        dr["name"] = $"{appointment.Customer.FirstName} {appointment.Customer.LastName}";
+                        dr["name"] = $"{appointment.CustomerFirstName} {appointment.CustomerLastName}";
                     ;
                         dt.Rows.Add(dr);
                     }

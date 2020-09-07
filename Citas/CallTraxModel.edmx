@@ -12,7 +12,10 @@
           <Property Name="AppointmentId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="StartDateTime" Type="datetime" Nullable="false" />
           <Property Name="EndDateTime" Type="datetime" Nullable="false" />
-          <Property Name="CustomerId" Type="bigint" Nullable="false" />
+          <Property Name="CustomerFirstName" Type="nchar" MaxLength="50" Nullable="false" />
+          <Property Name="CustomerLastName" Type="nchar" MaxLength="50" />
+          <Property Name="CustomerPhoneNumber" Type="nchar" MaxLength="20" />
+          <Property Name="CustomerEmail" Type="nchar" MaxLength="100" />
           <Property Name="ServiceCategoryId" Type="smallint" Nullable="false" />
           <Property Name="LocationId" Type="bigint" Nullable="false" />
           <Property Name="ConsultantId" Type="bigint" Nullable="false" />
@@ -233,16 +236,6 @@
           <Property Name="StartTime" Type="time" Precision="7" Nullable="false" />
           <Property Name="EndTime" Type="time" Precision="7" Nullable="false" />
         </EntityType>
-        <EntityType Name="Customer">
-          <Key>
-            <PropertyRef Name="CustomerId" />
-          </Key>
-          <Property Name="CustomerId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="FirstName" Type="nchar" MaxLength="50" Nullable="false" />
-          <Property Name="LastName" Type="nchar" MaxLength="50" Nullable="false" />
-          <Property Name="PhoneNumber" Type="nchar" MaxLength="20" />
-          <Property Name="EmailAddress" Type="nchar" MaxLength="50" />
-        </EntityType>
         <EntityType Name="ServiceCategory">
           <Key>
             <PropertyRef Name="ServiceCategoryId" />
@@ -305,18 +298,6 @@
             </Principal>
             <Dependent Role="Appointment">
               <PropertyRef Name="ConsultantId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Appointment_Customer">
-          <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
-          <End Role="Appointment" Type="Self.Appointment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Customer">
-              <PropertyRef Name="CustomerId" />
-            </Principal>
-            <Dependent Role="Appointment">
-              <PropertyRef Name="CustomerId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -754,7 +735,6 @@
           <EntitySet Name="ClientUser" EntityType="Self.ClientUser" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Consultant" EntityType="Self.Consultant" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ConsultantSchedule" EntityType="Self.ConsultantSchedule" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ServiceCategory" EntityType="Self.ServiceCategory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SessionTime" EntityType="Self.SessionTime" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SurveyQuestionType" EntityType="Self.SurveyQuestionType" Schema="dbo" store:Type="Tables" />
@@ -766,10 +746,6 @@
           </AssociationSet>
           <AssociationSet Name="FK_Appointment_Consultant" Association="Self.FK_Appointment_Consultant">
             <End Role="Consultant" EntitySet="Consultant" />
-            <End Role="Appointment" EntitySet="Appointment" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Appointment_Customer" Association="Self.FK_Appointment_Customer">
-            <End Role="Customer" EntitySet="Customer" />
             <End Role="Appointment" EntitySet="Appointment" />
           </AssociationSet>
           <AssociationSet Name="FK_Appointment_ServiceCategory" Association="Self.FK_Appointment_ServiceCategory">
@@ -920,15 +896,17 @@
           <Property Name="AppointmentId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="StartDateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="EndDateTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="CustomerId" Type="Int64" Nullable="false" />
           <Property Name="ServiceCategoryId" Type="Int16" Nullable="false" />
           <Property Name="LocationId" Type="Int64" Nullable="false" />
           <Property Name="ConsultantId" Type="Int64" Nullable="false" />
           <NavigationProperty Name="ClientLocation" Relationship="Self.FK_Appointment_ClientLocation" FromRole="Appointment" ToRole="ClientLocation" />
           <NavigationProperty Name="Consultant" Relationship="Self.FK_Appointment_Consultant" FromRole="Appointment" ToRole="Consultant" />
-          <NavigationProperty Name="Customer" Relationship="Self.FK_Appointment_Customer" FromRole="Appointment" ToRole="Customer" />
           <NavigationProperty Name="ServiceCategory" Relationship="Self.FK_Appointment_ServiceCategory" FromRole="Appointment" ToRole="ServiceCategory" />
           <Property Name="Note" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <Property Name="CustomerFirstName" Type="String" Nullable="false" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="CustomerLastName" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="CustomerPhoneNumber" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="CustomerEmail" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
         </EntityType>
         <EntityType Name="Call">
           <Key>
@@ -1208,17 +1186,6 @@
           <NavigationProperty Name="ClientLocation" Relationship="Self.FK_ConsultantSchedule_ClientLocation" FromRole="ConsultantSchedule" ToRole="ClientLocation" />
           <NavigationProperty Name="Consultant" Relationship="Self.FK_ConsultantSchedule_Consultant" FromRole="ConsultantSchedule" ToRole="Consultant" />
         </EntityType>
-        <EntityType Name="Customer">
-          <Key>
-            <PropertyRef Name="CustomerId" />
-          </Key>
-          <Property Name="CustomerId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="PhoneNumber" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
-          <Property Name="EmailAddress" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
-          <NavigationProperty Name="Appointments" Relationship="Self.FK_Appointment_Customer" FromRole="Customer" ToRole="Appointment" />
-        </EntityType>
         <EntityType Name="ServiceCategory">
           <Key>
             <PropertyRef Name="ServiceCategoryId" />
@@ -1287,18 +1254,6 @@
             </Principal>
             <Dependent Role="Appointment">
               <PropertyRef Name="ConsultantId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Appointment_Customer">
-          <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
-          <End Role="Appointment" Type="Self.Appointment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Customer">
-              <PropertyRef Name="CustomerId" />
-            </Principal>
-            <Dependent Role="Appointment">
-              <PropertyRef Name="CustomerId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1736,7 +1691,6 @@
           <EntitySet Name="ClientUsers" EntityType="Self.ClientUser" />
           <EntitySet Name="Consultants" EntityType="Self.Consultant" />
           <EntitySet Name="ConsultantSchedules" EntityType="Self.ConsultantSchedule" />
-          <EntitySet Name="Customers" EntityType="Self.Customer" />
           <EntitySet Name="ServiceCategories" EntityType="Self.ServiceCategory" />
           <EntitySet Name="SessionTimes" EntityType="Self.SessionTime" />
           <EntitySet Name="SurveyQuestionTypes" EntityType="Self.SurveyQuestionType" />
@@ -1748,10 +1702,6 @@
           </AssociationSet>
           <AssociationSet Name="FK_Appointment_Consultant" Association="Self.FK_Appointment_Consultant">
             <End Role="Consultant" EntitySet="Consultants" />
-            <End Role="Appointment" EntitySet="Appointments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Appointment_Customer" Association="Self.FK_Appointment_Customer">
-            <End Role="Customer" EntitySet="Customers" />
             <End Role="Appointment" EntitySet="Appointments" />
           </AssociationSet>
           <AssociationSet Name="FK_Appointment_ServiceCategory" Association="Self.FK_Appointment_ServiceCategory">
@@ -1900,11 +1850,14 @@
           <EntitySetMapping Name="Appointments">
             <EntityTypeMapping TypeName="CallTraxModel.Appointment">
               <MappingFragment StoreEntitySet="Appointment">
+                <ScalarProperty Name="CustomerEmail" ColumnName="CustomerEmail" />
+                <ScalarProperty Name="CustomerPhoneNumber" ColumnName="CustomerPhoneNumber" />
+                <ScalarProperty Name="CustomerLastName" ColumnName="CustomerLastName" />
+                <ScalarProperty Name="CustomerFirstName" ColumnName="CustomerFirstName" />
                 <ScalarProperty Name="Note" ColumnName="Note" />
                 <ScalarProperty Name="AppointmentId" ColumnName="AppointmentId" />
                 <ScalarProperty Name="StartDateTime" ColumnName="StartDateTime" />
                 <ScalarProperty Name="EndDateTime" ColumnName="EndDateTime" />
-                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
                 <ScalarProperty Name="ServiceCategoryId" ColumnName="ServiceCategoryId" />
                 <ScalarProperty Name="LocationId" ColumnName="LocationId" />
                 <ScalarProperty Name="ConsultantId" ColumnName="ConsultantId" />
@@ -2147,17 +2100,6 @@
                 <ScalarProperty Name="DayOfWeek" ColumnName="DayOfWeek" />
                 <ScalarProperty Name="StartTime" ColumnName="StartTime" />
                 <ScalarProperty Name="EndTime" ColumnName="EndTime" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Customers">
-            <EntityTypeMapping TypeName="CallTraxModel.Customer">
-              <MappingFragment StoreEntitySet="Customer">
-                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
-                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
-                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
