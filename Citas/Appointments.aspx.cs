@@ -198,12 +198,14 @@ namespace Citas
         {
             UpdateAppointmentTime(e.Id, e.NewStart, e.NewEnd);
         }
+
+
         //protected void DayPilotCalendar1_OnEventClick(object sender, EventClickEventArgs e)
         //{
         //    ClientScript.RegisterStartupScript(this.GetType(), "alert", "ShowPopup();", true);
         //    this.lblMessage.Text = "Your Registration is done successfully. Our team will contact you shotly";
         //}
- 
+
 
     }
 }

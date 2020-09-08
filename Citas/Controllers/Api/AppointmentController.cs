@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Citas.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +13,62 @@ namespace Citas.Controllers.Api
     public class AppointmentController : ApiController
     {
         // GET api/<controller>
-        public IEnumerable<string> Get()
+        public string Get(string locationId, string consultantId, DateTime start, DateTime end)
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                long locId = 0;
+                long.TryParse(locationId, out locId);
+                long consId = 0;
+                long.TryParse(consultantId, out consId);
+                using (CallTraxEntities callTraxDb = new CallTraxEntities())
+                {
+                    List<SessionTime> sessions = callTraxDb.SessionTimes.Where(st => st.ConsultantId == consId).ToList();
+                    List<object> services = new List<object>();
+                    List<object> locations = new List<object>();
+                    ClientLocation location = callTraxDb.ClientLocations.Where(l => l.ClientLocationId == locId).FirstOrDefault();
+                    locations.Add(new { value = locId, text = location.LocationName.Trim() });
+                    Consultant consultant = callTraxDb.Consultants.Where(c => c.ConsultantId == consId).FirstOrDefault();
+                    List<object> consultants = new List<object>();
+                    consultants.Add(new { value = consId, text = consultant.ConsultantName.Trim() });
+                    bool first = true;
+                    long selService = 0;
+                    foreach (SessionTime session in sessions)
+                    {
+                        if (first)
+                        {
+                            selService = session.ServiceCategory.ServiceCategoryId;
+                            first = false;
+                        }
+                        services.Add(new { value = session.ServiceCategory.ServiceCategoryId.ToString().Trim(), text = session.ServiceCategory.Name.Trim() });
+                    }
+                    var data = new AppointmentViewModel
+                        {
+                            Id = 0,
+                            StartDateTime = start,
+                            EndDateTime = end,
+                            StartTime = start.ToString("hh:mm tt"),
+                            EndTime = end.ToString("hh:mm tt"),
+                            FirstName = "",
+                            LastName = "",
+                            Phone = "",
+                            LocationId = locId,
+                            LocationList = locations,
+                            ConsultantList = consultants,
+                            ConsultantId = consId,
+                            ServiceId = selService,
+                            ServiceList = services,
+                            Note = ""
+                        };
+                    return JsonConvert.SerializeObject(data);
+
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         // GET api/<controller>/5
@@ -37,19 +91,22 @@ namespace Citas.Controllers.Api
                         {
                             services.Add( new { value = session.ServiceCategory.ServiceCategoryId.ToString().Trim(), text = session.ServiceCategory.Name.Trim() });
                         }
-                        var data = new
+                        var data = new AppointmentViewModel
                         {
+                            Id = appt.AppointmentId,
+                            StartDateTime = appt.StartDateTime,
+                            EndDateTime = appt.EndDateTime,
                             StartTime = appt.StartDateTime.ToString("hh:mm tt"),
                             EndTime = appt.EndDateTime.ToString("hh:mm tt"),
                             FirstName = appt.CustomerFirstName.Trim(),
                             LastName = appt.CustomerLastName.Trim(),
                             Phone = appt.CustomerPhoneNumber.Trim(),
                             LocationId = appt.ClientLocation.ClientLocationId,
-                            Locations = locations,
-                            Consultants= consultants,
+                            LocationList = locations,
+                            ConsultantList= consultants,
                             ConsultantId = appt.Consultant.ConsultantId,
                             ServiceId = appt.ServiceCategory.ServiceCategoryId,
-                            Services = services,
+                            ServiceList = services,
                             Note = appt.Note 
                         };
                         return JsonConvert.SerializeObject(data);
@@ -69,8 +126,39 @@ namespace Citas.Controllers.Api
         }
 
         // POST api/<controller>
-        public void Post([FromBody] string value)
+        public void Post([FromBody] AppointmentViewModel value)
         {
+            try
+            {
+                //AppointmentViewModel appt = (AppointmentViewModel)JsonConvert.DeserializeObject(value);
+                AppointmentViewModel appt = value;
+                if (appt.Id == 0) //New Appointment
+                {
+
+                }
+                else //Update Appointment
+                {
+                    using (CallTraxEntities callTraxDb = new CallTraxEntities())
+                    {
+                        Appointment appointment = callTraxDb.Appointments.Where(a => a.AppointmentId == appt.Id).FirstOrDefault();
+                        if(appointment != null)
+                        {
+                            appointment.CustomerFirstName = appt.FirstName;
+                            appointment.CustomerLastName = appt.LastName;
+                            appointment.CustomerPhoneNumber = appt.Phone;
+                            appointment.ServiceCategoryId = appt.ServiceId;
+                            appointment.Note = appt.Note;
+                            callTraxDb.SaveChanges();
+                        }
+                    }
+                }
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         // PUT api/<controller>/5

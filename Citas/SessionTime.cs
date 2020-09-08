@@ -16,7 +16,7 @@ namespace Citas
     {
         public long SessionTimeId { get; set; }
         public long ConsultantId { get; set; }
-        public short ServiceCategoryId { get; set; }
+        public long ServiceCategoryId { get; set; }
         public short SessionMinutes { get; set; }
     
         public virtual Consultant Consultant { get; set; }

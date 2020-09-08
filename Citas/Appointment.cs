@@ -17,7 +17,7 @@ namespace Citas
         public long AppointmentId { get; set; }
         public System.DateTime StartDateTime { get; set; }
         public System.DateTime EndDateTime { get; set; }
-        public short ServiceCategoryId { get; set; }
+        public long ServiceCategoryId { get; set; }
         public long LocationId { get; set; }
         public long ConsultantId { get; set; }
         public string Note { get; set; }

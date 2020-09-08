@@ -45,6 +45,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">Appointment Information</h4>
+                    <input type="hidden" id="apptid" name="apptid" value="0">
                 </div>
                 <div class="modal-body">
                     <table>
@@ -111,9 +112,9 @@
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button id="brnCancelAppointment" type="button" class="btn btn-danger pull-left" data-dismiss="modal">Cancel appointment</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button id="btnSaveAppointment" type="button" class="btn btn-primary">Save changes</button>
+                    <button id="btnCancelAppointment" type="button" class="btn btn-danger pull-left" data-dismiss="modal">Cancel appointment</button>
+                    <button id="btnCloseAppointment" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button id="btnSaveAppointment" type="button" class="btn btn-primary" onclick="SaveAppt();">Save changes</button>
                 </div>
             </div> <!-- /.modal-content -->
         </div> <!-- /.modal-dialog -->
@@ -139,22 +140,55 @@
                 cache: "false",
                 success: function (response) {
                     //var app = response.d;
+                    
                     console.log(response);
                     var appt = $.parseJSON(response);
+                    $("#apptid").val(id);
                     $("#txtduration").val(appt.StartTime + " to " + appt.EndTime);
                     $("#txtfirstname").val(appt.FirstName);
                     $("#txtlastname").val(appt.LastName);
                     $("#txtphone").val(appt.Phone);
                     $("#txtnote").val(appt.Note);
-                    PopulateDDL($("#ddllocation"),appt.Locations, appt.LocationId);
-                    PopulateDDL($("#ddlconsultant"), appt.Consultants, appt.ConsultantId);
-                    PopulateDDL($("#ddlservice"), appt.Services, appt.ServiceId);
+                    PopulateDDL($("#ddllocation"), appt.LocationList, appt.LocationId);
+                    PopulateDDL($("#ddlconsultant"), appt.ConsultantList, appt.ConsultantId);
+                    PopulateDDL($("#ddlservice"), appt.ServiceList, appt.ServiceId);
                     $("#btnShowPopup").click();
                 },
                 error: function (e) {
                     alert("Error: " + e.status + " " + e.statusText);
                 }
             });
+    }
+
+    function SaveAppt() {
+        try {
+            var apptdata = new Object();
+            apptdata.Id = Number($("#apptid").val());
+            apptdata.FirstName = $("#txtfirstname").val();
+            apptdata.LastName = $("#txtlastname").val();
+            apptdata.Phone = $("#txtphone").val();
+            apptdata.ServiceId = Number($("#ddlservice").val());
+            apptdata.Note = $.trim($("#txtnote").val());
+
+            $.ajax({
+                type: "POST",
+                url: "api/appointment/",
+                data: JSON.stringify(apptdata),
+                contentType: "application/json; charset=utf-8",
+                async: "true",
+                cache: "false",
+                success: function (response) {
+                    $("#btnCloseAppointment").click();
+                },
+                error: function (e) {
+                    alert("Error: " + e.status + " " + e.statusText);
+                }
+            });
+
+        }
+        catch (e) {
+            alert("Error: " + e)
+        }
     }
 
     function PopulateDDL(ddl, list, id) {
