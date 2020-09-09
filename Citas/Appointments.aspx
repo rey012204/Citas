@@ -7,11 +7,11 @@
     <div class="row">
         <div class="col-md-6">
             <asp:Label ID="lblLocation" runat="server" Text="Location"></asp:Label>
-            <asp:DropDownList ID="ddlLocation" runat="server"></asp:DropDownList>
+            <asp:DropDownList ID="ddlLocation" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlLocation_SelectedIndexChanged"></asp:DropDownList>
         </div>
         <div class="col-md-6">
             <asp:Label ID="lblConsultant" runat="server" Text="Consultant"></asp:Label>
-            <asp:DropDownList ID="ddlConsultant" runat="server" OnSelectedIndexChanged="ddlConsultant_SelectedIndexChanged"></asp:DropDownList>
+            <asp:DropDownList ID="ddlConsultant" runat="server" OnSelectedIndexChanged="ddlConsultant_SelectedIndexChanged" AutoPostBack="True"></asp:DropDownList>
             <asp:DropDownList ID="ddlService" runat="server" Style="visibility: hidden;" ></asp:DropDownList>
         </div>
     </div>

@@ -229,6 +229,7 @@ namespace Citas
         protected void ddlConsultant_SelectedIndexChanged(object sender, EventArgs e)
         {
             PopulateServicesDDL(ddlConsultant.SelectedValue);
+            LoadCalendar();
         }
 
         protected void PopulateServicesDDL(string ConsultantId)
@@ -251,13 +252,18 @@ namespace Citas
                 throw;
             }
         }
- 
-    //protected void DayPilotCalendar1_OnEventClick(object sender, EventClickEventArgs e)
-    //{
-    //    ClientScript.RegisterStartupScript(this.GetType(), "alert", "ShowPopup();", true);
-    //    this.lblMessage.Text = "Your Registration is done successfully. Our team will contact you shotly";
-    //}
+
+        protected void ddlLocation_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            LoadCalendar();
+        }
+
+        //protected void DayPilotCalendar1_OnEventClick(object sender, EventClickEventArgs e)
+        //{
+        //    ClientScript.RegisterStartupScript(this.GetType(), "alert", "ShowPopup();", true);
+        //    this.lblMessage.Text = "Your Registration is done successfully. Our team will contact you shotly";
+        //}
 
 
-}
+    }
 }
