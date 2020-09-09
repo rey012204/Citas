@@ -96,8 +96,6 @@ namespace Citas.Controllers.Api
                             Id = appt.AppointmentId,
                             StartDateTime = appt.StartDateTime,
                             EndDateTime = appt.EndDateTime,
-                            StartTime = appt.StartDateTime.ToString("hh:mm tt"),
-                            EndTime = appt.EndDateTime.ToString("hh:mm tt"),
                             FirstName = appt.CustomerFirstName.Trim(),
                             LastName = appt.CustomerLastName.Trim(),
                             Phone = appt.CustomerPhoneNumber.Trim(),
@@ -134,7 +132,24 @@ namespace Citas.Controllers.Api
                 AppointmentViewModel appt = value;
                 if (appt.Id == 0) //New Appointment
                 {
-
+                    using (CallTraxEntities callTraxDb = new CallTraxEntities())
+                    {
+                        Appointment newappt = new Appointment
+                        {
+                            StartDateTime = value.StartDateTime.ToLocalTime(),
+                            EndDateTime = value.EndDateTime.ToLocalTime(),
+                            LocationId = value.LocationId,
+                            ConsultantId = value.ConsultantId,
+                            ServiceCategoryId = appt.ServiceId,
+                            CustomerFirstName = value.FirstName,
+                            CustomerLastName = value.LastName,
+                            CustomerPhoneNumber = value.Phone,
+                            Note = value.Note
+                        };
+                        callTraxDb.Appointments.Add(newappt);
+                        callTraxDb.SaveChanges();
+                    }
+                    
                 }
                 else //Update Appointment
                 {

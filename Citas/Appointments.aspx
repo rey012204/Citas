@@ -11,7 +11,8 @@
         </div>
         <div class="col-md-6">
             <asp:Label ID="lblConsultant" runat="server" Text="Consultant"></asp:Label>
-            <asp:DropDownList ID="ddlConsultant" runat="server"></asp:DropDownList>
+            <asp:DropDownList ID="ddlConsultant" runat="server" OnSelectedIndexChanged="ddlConsultant_SelectedIndexChanged"></asp:DropDownList>
+            <asp:DropDownList ID="ddlService" runat="server" Style="visibility: hidden;" ></asp:DropDownList>
         </div>
     </div>
     <br />
@@ -26,7 +27,7 @@
         NonBusinessHours="Hide" 
         onbeforeeventrender="DayPilotCalendar1_BeforeEventRender"
         TimeRangeSelectedHandling="JavaScript"
-        TimeRangeSelectedJavaScript="ShowPopupNew();"
+        TimeRangeSelectedJavaScript="ShowPopupNew(start, end, resource)"
         CssOnly="true"
         CssClassPrefix="calendar_traditional"
         EventMoveHandling="CallBack"
@@ -53,27 +54,35 @@
                             <td>
                                 <table>
                                     <tr>
-                                        <td>Duration:</td>
+                                        <td>Start:</td>
                                         <td>
-                                            <input type="text" id="txtduration" readonly />
+                                            <input type="hidden" id="txtstartval" />
+                                            <input type="text" id="txtstart" readonly />
+                                        </td>
+                                    </tr>
+                                   <tr>
+                                        <td>End:</td>
+                                        <td>
+                                            <input type="hidden" id="txtendval" />
+                                            <input type="text" id="txtend" readonly />
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Location:</td>
                                         <td>
-                                            <select name="ddllocation" id="ddllocation"></select>
+                                            <select name="selectlocation" id="selectlocation"></select>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Consultant:</td>
                                         <td>
-                                            <select name="ddlconsultant" id="ddlconsultant"></select>
+                                            <select name="selectconsultant" id="selectconsultant"></select>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Service:</td>
                                          <td>
-                                            <select name="ddlservice" id="ddlservice"></select>
+                                            <select name="selectservice" id="selectservice"></select>
                                         </td>                       
                                     </tr>
                                     <tr>
@@ -144,14 +153,17 @@
                     console.log(response);
                     var appt = $.parseJSON(response);
                     $("#apptid").val(id);
-                    $("#txtduration").val(appt.StartTime + " to " + appt.EndTime);
+                    $("#txtstartval").val(appt.StartDateTime.valueOf());
+                    $("#txtstart").val(appt.StartDateTime.toString());
+                    $("#txtendval").val(appt.EndDateTime.valueOf());
+                    $("#txtend").val(appt.EndDateTime.toString());
                     $("#txtfirstname").val(appt.FirstName);
                     $("#txtlastname").val(appt.LastName);
                     $("#txtphone").val(appt.Phone);
                     $("#txtnote").val(appt.Note);
-                    PopulateDDL($("#ddllocation"), appt.LocationList, appt.LocationId);
-                    PopulateDDL($("#ddlconsultant"), appt.ConsultantList, appt.ConsultantId);
-                    PopulateDDL($("#ddlservice"), appt.ServiceList, appt.ServiceId);
+                    PopulateDDL($("#selectlocation"), appt.LocationList, appt.LocationId);
+                    PopulateDDL($("#selectconsultant"), appt.ConsultantList, appt.ConsultantId);
+                    PopulateDDL($("#selectservice"), appt.ServiceList, appt.ServiceId);
                     $("#btnShowPopup").click();
                 },
                 error: function (e) {
@@ -163,17 +175,48 @@
     function SaveAppt() {
         try {
             var apptdata = new Object();
+            var d1 = new Date($("#txtstartval").val());
+            var d2 = new Date($("#txtendval").val());
+            apptdata.StartDateTime = d1;
+            apptdata.EndDateTime = d2;
             apptdata.Id = Number($("#apptid").val());
+            apptdata.LocationId = Number($("#selectlocation").val());
+            apptdata.ConsultantId = Number($("#selectconsultant").val());
             apptdata.FirstName = $("#txtfirstname").val();
             apptdata.LastName = $("#txtlastname").val();
             apptdata.Phone = $("#txtphone").val();
-            apptdata.ServiceId = Number($("#ddlservice").val());
+            apptdata.ServiceId = Number($("#selectservice").val());
             apptdata.Note = $.trim($("#txtnote").val());
 
             $.ajax({
                 type: "POST",
                 url: "api/appointment/",
                 data: JSON.stringify(apptdata),
+                contentType: "application/json; charset=utf-8",
+                async: "true",
+                cache: "false",
+                success: function (response) {
+                    //RefreshCalendar();
+                    $("#btnCloseAppointment").click();
+                    location.reload();
+                },
+                error: function (e) {
+                    alert("Error: " + e.status + " " + e.statusText);
+                }
+            });
+
+        }
+        catch (e) {
+            alert("Error: " + e)
+        }
+    }
+
+    function RefreshCalendar() {
+        try {
+            $.ajax({
+                type: "GET",
+                url: "Appointment.aspx/RefreshCalendar",
+                data: '{}',
                 contentType: "application/json; charset=utf-8",
                 async: "true",
                 cache: "false",
@@ -204,9 +247,51 @@
             console.log("Error: " + e)
         }
     }
-    function ShowPopupNew(start, end) {
-        alert("ShowPopupNew: ");
-        $("#btnShowPopup").click();
+
+    function ShowPopupNew(start, end, resource) {
+        try
+        {
+            $("#apptid").val(0);
+            $("#txtstartval").val(start.valueOf());
+            $("#txtstart").val(start.toStringSortable());
+            $("#txtendval").val(end.valueOf());
+            $("#txtend").val(end.toStringSortable());
+            $("#txtfirstname").val('');
+            $("#txtlastname").val('');
+            $("#txtphone").val('');
+            $("#txtnote").val('');
+            $("#selectlocation").empty();
+            $("#selectconsultant").empty();
+            $("#selectservice").empty();
+
+            var loc = document.getElementById("<%=ddlLocation.ClientID%>");
+            var locvalue = loc.options[loc.selectedIndex].value;
+            var loctext = loc.options[loc.selectedIndex].text;
+            $("#selectlocation").append("<option value='" + locvalue + "' selected>" + loctext + "</option>");
+
+            var con = document.getElementById("<%=ddlConsultant.ClientID%>");
+            var convalue = con.options[con.selectedIndex].value;
+            var context = con.options[con.selectedIndex].text;
+            $("#selectconsultant").append("<option value='" + convalue + "' selected>" + context + "</option>");
+
+            var serv = document.getElementById("<%=ddlService.ClientID%>");
+            var first = true;
+            for (var i = 0; i < serv.length; i++) {
+                var selected = '';
+                if (first) {
+                    selected = 'selected';
+                    first = false;
+                }
+
+                $("#selectservice").append("<option value='" + serv[i].value + "' " + selected + ">" + serv[i].text + "</option>");
+            }
+
+            $("#btnShowPopup").click();
+        }
+        catch (e) {
+            alert("Error: " + e)
+        }
+
     }
 
 </script>    

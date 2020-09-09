@@ -27,19 +27,44 @@ namespace Citas
             if (!IsPostBack)
             {
                 PopulateDDL();
+                LoadCalendar();
             }
-            if (Session["CalendarStartDate"] == null)
+            else
             {
-                Session["CalendarStartDate"] = firstDayOfWeek(DateTime.Now, DayOfWeek.Sunday);
+                if (Session["CalendarStartDate"] == null)
+                {
+                    Session["CalendarStartDate"] = firstDayOfWeek(DateTime.Now, DayOfWeek.Sunday);
+                }
+                DayPilotCalendar1.StartDate = (DateTime)Session["CalendarStartDate"];
+                if (Session["CalendarData"] == null)
+                {
+                    Session["CalendarData"] = CalendarData.GetData(ddlLocation.SelectedValue, ddlConsultant.SelectedValue, DayPilotCalendar1.StartDate, DayPilotCalendar1.StartDate.AddDays(7));
+                }
+                table = (DataTable)Session["CalendarData"];
+                DayPilotCalendar1.DataSource = table;
+                DataBind();
             }
-            DayPilotCalendar1.StartDate = (DateTime)Session["CalendarStartDate"];
-            if (Session["CalendarData"] == null)
+
+        }
+        protected void LoadCalendar()
+        {
+            try
             {
+                if (Session["CalendarStartDate"] == null)
+                {
+                    Session["CalendarStartDate"] = firstDayOfWeek(DateTime.Now, DayOfWeek.Sunday);
+                }
+                DayPilotCalendar1.StartDate = (DateTime)Session["CalendarStartDate"];
                 Session["CalendarData"] = CalendarData.GetData(ddlLocation.SelectedValue, ddlConsultant.SelectedValue, DayPilotCalendar1.StartDate, DayPilotCalendar1.StartDate.AddDays(7));
+                table = (DataTable)Session["CalendarData"];
+                DayPilotCalendar1.DataSource = table;
+                DataBind();
             }
-            table = (DataTable)Session["CalendarData"];
-            DayPilotCalendar1.DataSource = table;
-            DataBind();
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
         protected DataTable getDataDemo()
         {
@@ -151,6 +176,8 @@ namespace Citas
                         {
                             ddlConsultant.Items.Add(new ListItem { Text = consultant.ConsultantName, Value = consultant.ConsultantId.ToString() });
                         }
+
+                        PopulateServicesDDL(ddlConsultant.SelectedValue);
                     }
                 }
             }
@@ -199,13 +226,38 @@ namespace Citas
             UpdateAppointmentTime(e.Id, e.NewStart, e.NewEnd);
         }
 
+        protected void ddlConsultant_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            PopulateServicesDDL(ddlConsultant.SelectedValue);
+        }
 
-        //protected void DayPilotCalendar1_OnEventClick(object sender, EventClickEventArgs e)
-        //{
-        //    ClientScript.RegisterStartupScript(this.GetType(), "alert", "ShowPopup();", true);
-        //    this.lblMessage.Text = "Your Registration is done successfully. Our team will contact you shotly";
-        //}
+        protected void PopulateServicesDDL(string ConsultantId)
+        {
+            try
+            {
+                ddlService.Items.Clear();
+                using (CallTraxEntities callTraxDb = new CallTraxEntities())
+                {
+                    List<SessionTime> sessionList = callTraxDb.SessionTimes.Where(s => s.ConsultantId.ToString() == ddlConsultant.SelectedValue).ToList();
+                    foreach(SessionTime session in sessionList)
+                    {
+                        ddlService.Items.Add(new ListItem(session.ServiceCategory.Name, session.ServiceCategory.ServiceCategoryId.ToString()));
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+ 
+    //protected void DayPilotCalendar1_OnEventClick(object sender, EventClickEventArgs e)
+    //{
+    //    ClientScript.RegisterStartupScript(this.GetType(), "alert", "ShowPopup();", true);
+    //    this.lblMessage.Text = "Your Registration is done successfully. Our team will contact you shotly";
+    //}
 
 
-    }
+}
 }
