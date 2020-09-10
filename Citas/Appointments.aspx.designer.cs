@@ -15,13 +15,13 @@ namespace Citas
     {
 
         /// <summary>
-        /// lblLocation control.
+        /// txtDate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblLocation;
+        protected global::System.Web.UI.WebControls.TextBox txtDate;
 
         /// <summary>
         /// ddlLocation control.
@@ -31,15 +31,6 @@ namespace Citas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlLocation;
-
-        /// <summary>
-        /// lblConsultant control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblConsultant;
 
         /// <summary>
         /// ddlConsultant control.

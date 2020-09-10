@@ -28,23 +28,9 @@ namespace Citas
             {
                 PopulateDDL();
                 LoadCalendar();
+                txtDate.Text = DateTime.Today.ToString("yyyy-MM-dd");
             }
-            else
-            {
-                if (Session["CalendarStartDate"] == null)
-                {
-                    Session["CalendarStartDate"] = firstDayOfWeek(DateTime.Now, DayOfWeek.Sunday);
-                }
-                DayPilotCalendar1.StartDate = (DateTime)Session["CalendarStartDate"];
-                if (Session["CalendarData"] == null)
-                {
-                    Session["CalendarData"] = CalendarData.GetData(ddlLocation.SelectedValue, ddlConsultant.SelectedValue, DayPilotCalendar1.StartDate, DayPilotCalendar1.StartDate.AddDays(7));
-                }
-                table = (DataTable)Session["CalendarData"];
-                DayPilotCalendar1.DataSource = table;
-                DataBind();
-            }
-
+            
         }
         protected void LoadCalendar()
         {
@@ -196,7 +182,11 @@ namespace Citas
                 if (long.TryParse(id, out lid))
                 {
                     CalendarData.MoveAppointment(lid, start, end);
+
+                    LoadCalendar();
+
                     DataRow dr = table.Rows.Find(id);
+
                     if (dr != null)
                     {
                         dr["start"] = start;
@@ -223,7 +213,8 @@ namespace Citas
         }
         protected void DayPilotCalendar1_OnEventResize(object sender, EventResizeEventArgs e)
         {
-            UpdateAppointmentTime(e.Id, e.NewStart, e.NewEnd);
+            //bug in calendar moving end date 30 minutes back
+            UpdateAppointmentTime(e.Id, e.NewStart, e.NewEnd.AddMinutes(30));
         }
 
         protected void ddlConsultant_SelectedIndexChanged(object sender, EventArgs e)
@@ -256,6 +247,27 @@ namespace Citas
         protected void ddlLocation_SelectedIndexChanged(object sender, EventArgs e)
         {
             LoadCalendar();
+        }
+
+        protected void txtDate_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                string sd = txtDate.Text;
+                DateTime d = DateTime.Today;
+                if(!DateTime.TryParse(sd, out d))
+                {
+                    d = DateTime.Today;
+                }
+                Session["CalendarStartDate"] = firstDayOfWeek(d, DayOfWeek.Sunday);
+                LoadCalendar();
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         //protected void DayPilotCalendar1_OnEventClick(object sender, EventClickEventArgs e)

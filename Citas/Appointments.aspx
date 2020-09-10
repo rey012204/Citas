@@ -5,12 +5,16 @@
     <link href="Themes/calendar_traditional.css" rel="stylesheet" />
     <h2><%: Title %>.</h2>
     <div class="row">
-        <div class="col-md-6">
-            <asp:Label ID="lblLocation" runat="server" Text="Location"></asp:Label>
+        <div class="col-md-4">
+            <label class="control-label" for="date">Date</label>
+            <asp:TextBox ID="txtDate" runat="server" placeholder="mm/dd/yyyy" Textmode="Date" ReadOnly = "false" AutoPostBack="True" OnTextChanged="txtDate_TextChanged"></asp:TextBox>
+        </div>
+        <div class="col-md-4">
+            <label class="control-label" for="date">Location</label>
             <asp:DropDownList ID="ddlLocation" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlLocation_SelectedIndexChanged"></asp:DropDownList>
         </div>
-        <div class="col-md-6">
-            <asp:Label ID="lblConsultant" runat="server" Text="Consultant"></asp:Label>
+        <div class="col-md-4">
+            <label class="control-label" for="date">Consultant</label>
             <asp:DropDownList ID="ddlConsultant" runat="server" OnSelectedIndexChanged="ddlConsultant_SelectedIndexChanged" AutoPostBack="True"></asp:DropDownList>
             <asp:DropDownList ID="ddlService" runat="server" Style="visibility: hidden;" ></asp:DropDownList>
         </div>
@@ -130,32 +134,39 @@
     </div> <!-- /.modal -->  
 
     <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                Delete Appointment Confirmation
-            </div>
-            <div class="modal-body">
-                Are you sure you want to Delete this appointment?
-            </div>
-            <div class="modal-footer">
-                <button id="btnCancelDelete" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button class="btn btn-danger btn-ok" onclick="DeleteAppt();">Delete</button>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    Delete Appointment Confirmation
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to Delete this appointment?
+                </div>
+                <div class="modal-footer">
+                    <button id="btnCancelDelete" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-danger btn-ok" onclick="DeleteAppt();">Delete</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
             
     <button type="button" style="display: none;" id="btnShowPopup" class="btn btn-primary btn-lg"
-                data-toggle="modal" data-target="#apptPopup">
-                Launch demo modal
-    </button>  
+                data-toggle="modal" data-target="#apptPopup">Modal1</button>  
     <button type="button" style="display: none;" id="btnShowConfirmDelete" class="btn btn-primary btn-lg"
-                data-toggle="modal" data-target="#confirm-delete">
-                Launch demo modal
-    </button>  
+                data-toggle="modal" data-target="#confirm-delete">Modal2</button>  
 
 <script type = "text/javascript">
+    $(document).ready(function () {
+        var date_input = $('input[name="date"]'); //our date input has the name "date"
+        var container = $('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
+        var options = {
+            format: 'mm/dd/yyyy',
+            container: container,
+            todayHighlight: true,
+            autoclose: true,
+        };
+        date_input.datepicker(options);
+    })
     function ShowPopup(id) {
             $.ajax({
                 type: "GET",
