@@ -128,46 +128,24 @@ namespace Citas.Controllers.Api
         {
             try
             {
-                //AppointmentViewModel appt = (AppointmentViewModel)JsonConvert.DeserializeObject(value);
                 AppointmentViewModel appt = value;
-                if (appt.Id == 0) //New Appointment
+                using (CallTraxEntities callTraxDb = new CallTraxEntities())
                 {
-                    using (CallTraxEntities callTraxDb = new CallTraxEntities())
+                    Appointment newappt = new Appointment
                     {
-                        Appointment newappt = new Appointment
-                        {
-                            StartDateTime = value.StartDateTime.ToLocalTime(),
-                            EndDateTime = value.EndDateTime.ToLocalTime(),
-                            LocationId = value.LocationId,
-                            ConsultantId = value.ConsultantId,
-                            ServiceCategoryId = appt.ServiceId,
-                            CustomerFirstName = value.FirstName,
-                            CustomerLastName = value.LastName,
-                            CustomerPhoneNumber = value.Phone,
-                            Note = value.Note
-                        };
-                        callTraxDb.Appointments.Add(newappt);
-                        callTraxDb.SaveChanges();
-                    }
-                    
+                        StartDateTime = value.StartDateTime.ToLocalTime(),
+                        EndDateTime = value.EndDateTime.ToLocalTime(),
+                        LocationId = value.LocationId,
+                        ConsultantId = value.ConsultantId,
+                        ServiceCategoryId = appt.ServiceId,
+                        CustomerFirstName = value.FirstName,
+                        CustomerLastName = value.LastName,
+                        CustomerPhoneNumber = value.Phone,
+                        Note = value.Note
+                    };
+                    callTraxDb.Appointments.Add(newappt);
+                    callTraxDb.SaveChanges();
                 }
-                else //Update Appointment
-                {
-                    using (CallTraxEntities callTraxDb = new CallTraxEntities())
-                    {
-                        Appointment appointment = callTraxDb.Appointments.Where(a => a.AppointmentId == appt.Id).FirstOrDefault();
-                        if(appointment != null)
-                        {
-                            appointment.CustomerFirstName = appt.FirstName;
-                            appointment.CustomerLastName = appt.LastName;
-                            appointment.CustomerPhoneNumber = appt.Phone;
-                            appointment.ServiceCategoryId = appt.ServiceId;
-                            appointment.Note = appt.Note;
-                            callTraxDb.SaveChanges();
-                        }
-                    }
-                }
-
             }
             catch (Exception)
             {
@@ -177,13 +155,52 @@ namespace Citas.Controllers.Api
         }
 
         // PUT api/<controller>/5
-        public void Put(int id, [FromBody] string value)
+        public void Put(int id, [FromBody] AppointmentViewModel value)
         {
+            try
+            {
+                AppointmentViewModel appt = value;
+                using (CallTraxEntities callTraxDb = new CallTraxEntities())
+                {
+                    Appointment appointment = callTraxDb.Appointments.Where(a => a.AppointmentId == appt.Id).FirstOrDefault();
+                    if (appointment != null)
+                    {
+                        appointment.CustomerFirstName = appt.FirstName;
+                        appointment.CustomerLastName = appt.LastName;
+                        appointment.CustomerPhoneNumber = appt.Phone;
+                        appointment.ServiceCategoryId = appt.ServiceId;
+                        appointment.Note = appt.Note;
+                        callTraxDb.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         // DELETE api/<controller>/5
         public void Delete(int id)
         {
+            try
+            {
+                using (CallTraxEntities callTraxDb = new CallTraxEntities())
+                {
+                    Appointment appt = callTraxDb.Appointments.Where(a => a.AppointmentId == id).FirstOrDefault();
+                    if(appt != null)
+                    {
+                        callTraxDb.Appointments.Remove(appt);
+                        callTraxDb.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

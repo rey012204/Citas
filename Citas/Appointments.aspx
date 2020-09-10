@@ -121,24 +121,41 @@
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button id="btnCancelAppointment" type="button" class="btn btn-danger pull-left" data-dismiss="modal">Cancel appointment</button>
+                    <button id="btnCancelAppointment" type="button" class="btn btn-danger pull-left" data-dismiss="modal" onclick="$('#btnShowConfirmDelete').click();">Delete appointment</button>
                     <button id="btnCloseAppointment" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button id="btnSaveAppointment" type="button" class="btn btn-primary" onclick="SaveAppt();">Save changes</button>
+                    <button id="btnSaveAppointment" type="button" class="btn btn-primary" onclick="SaveAppointment();">Save changes</button>
                 </div>
             </div> <!-- /.modal-content -->
         </div> <!-- /.modal-dialog -->
     </div> <!-- /.modal -->  
+
+    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                Delete Appointment Confirmation
+            </div>
+            <div class="modal-body">
+                Are you sure you want to Delete this appointment?
+            </div>
+            <div class="modal-footer">
+                <button id="btnCancelDelete" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-danger btn-ok" onclick="DeleteAppt();">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
             
     <button type="button" style="display: none;" id="btnShowPopup" class="btn btn-primary btn-lg"
                 data-toggle="modal" data-target="#apptPopup">
                 Launch demo modal
-            </button>   
-
-
-
+    </button>  
+    <button type="button" style="display: none;" id="btnShowConfirmDelete" class="btn btn-primary btn-lg"
+                data-toggle="modal" data-target="#confirm-delete">
+                Launch demo modal
+    </button>  
 
 <script type = "text/javascript">
-
     function ShowPopup(id) {
             $.ajax({
                 type: "GET",
@@ -148,15 +165,16 @@
                 async: "true",
                 cache: "false",
                 success: function (response) {
-                    //var app = response.d;
-                    
-                    console.log(response);
                     var appt = $.parseJSON(response);
+                    var startformat = formatDateTime(new Date(appt.StartDateTime.valueOf()));
+                    var endformat = formatDateTime(new Date(appt.EndDateTime.valueOf()));
                     $("#apptid").val(id);
                     $("#txtstartval").val(appt.StartDateTime.valueOf());
-                    $("#txtstart").val(appt.StartDateTime.toString());
+                    //$("#txtstart").val(appt.StartDateTime.toString());
+                    $("#txtstart").val(startformat);
                     $("#txtendval").val(appt.EndDateTime.valueOf());
-                    $("#txtend").val(appt.EndDateTime.toString());
+                    //$("#txtend").val(appt.EndDateTime.toString());
+                    $("#txtend").val(endformat);
                     $("#txtfirstname").val(appt.FirstName);
                     $("#txtlastname").val(appt.LastName);
                     $("#txtphone").val(appt.Phone);
@@ -171,23 +189,30 @@
                 }
             });
     }
+    function SaveAppointment() {
+        var apptdata = new Object();
+        var d1 = new Date($("#txtstartval").val());
+        var d2 = new Date($("#txtendval").val());
+        apptdata.StartDateTime = d1;
+        apptdata.EndDateTime = d2;
+        apptdata.Id = Number($("#apptid").val());
+        apptdata.LocationId = Number($("#selectlocation").val());
+        apptdata.ConsultantId = Number($("#selectconsultant").val());
+        apptdata.FirstName = $("#txtfirstname").val();
+        apptdata.LastName = $("#txtlastname").val();
+        apptdata.Phone = $("#txtphone").val();
+        apptdata.ServiceId = Number($("#selectservice").val());
+        apptdata.Note = $.trim($("#txtnote").val());
 
-    function SaveAppt() {
+        if (apptdata.Id == 0) {
+            PostAppt(apptdata);
+        }
+        else {
+            PutAppt(apptdata);
+        }
+    }
+    function PostAppt(apptdata) {
         try {
-            var apptdata = new Object();
-            var d1 = new Date($("#txtstartval").val());
-            var d2 = new Date($("#txtendval").val());
-            apptdata.StartDateTime = d1;
-            apptdata.EndDateTime = d2;
-            apptdata.Id = Number($("#apptid").val());
-            apptdata.LocationId = Number($("#selectlocation").val());
-            apptdata.ConsultantId = Number($("#selectconsultant").val());
-            apptdata.FirstName = $("#txtfirstname").val();
-            apptdata.LastName = $("#txtlastname").val();
-            apptdata.Phone = $("#txtphone").val();
-            apptdata.ServiceId = Number($("#selectservice").val());
-            apptdata.Note = $.trim($("#txtnote").val());
-
             $.ajax({
                 type: "POST",
                 url: "api/appointment/",
@@ -204,13 +229,52 @@
                     alert("Error: " + e.status + " " + e.statusText);
                 }
             });
-
         }
         catch (e) {
-            alert("Error: " + e)
+            alert("Error: " + e);
         }
     }
-
+    function PutAppt(apptdata) {
+        try {
+            $.ajax({
+                type: "PUT",
+                url: "api/appointment/" + apptdata.Id,
+                data: JSON.stringify(apptdata),
+                contentType: "application/json; charset=utf-8",
+                async: "true",
+                cache: "false",
+                success: function (response) {
+                    //RefreshCalendar();
+                    $("#btnCloseAppointment").click();
+                    location.reload();
+                },
+                error: function (e) {
+                    alert("Error: " + e.status + " " + e.statusText);
+                }
+            });
+        }
+        catch (e) {
+            alert("Error: " + e);
+        }
+    }
+    function DeleteAppt() {
+        $.ajax({
+                type: "DELETE",
+                url: "api/appointment/" + $("#apptid").val(),
+                data: "{}",
+                contentType: "application/json; charset=utf-8",
+                async: "true",
+                cache: "false",
+                success: function (response) {
+                    //RefreshCalendar();
+                    $("#btnCancelDelete").click();
+                    location.reload();
+                },
+                error: function (e) {
+                    alert("Error: " + e.status + " " + e.statusText);
+                }
+            });
+    }
     function RefreshCalendar() {
         try {
             $.ajax({
@@ -233,7 +297,6 @@
             alert("Error: " + e)
         }
     }
-
     function PopulateDDL(ddl, list, id) {
         try {
             for (k = 0; k < list.length; k++) {
@@ -247,15 +310,18 @@
             console.log("Error: " + e)
         }
     }
-
     function ShowPopupNew(start, end, resource) {
         try
         {
+            var startformat = formatDateTime(new Date(start.valueOf()));
+            var endformat = formatDateTime(new Date(end.valueOf()));
             $("#apptid").val(0);
             $("#txtstartval").val(start.valueOf());
-            $("#txtstart").val(start.toStringSortable());
+            //$("#txtstart").val(start.toStringSortable());
+            $("#txtstart").val(startformat);
             $("#txtendval").val(end.valueOf());
-            $("#txtend").val(end.toStringSortable());
+            //$("#txtend").val(end.toStringSortable());
+            $("#txtend").val(endformat);
             $("#txtfirstname").val('');
             $("#txtlastname").val('');
             $("#txtphone").val('');
@@ -293,7 +359,6 @@
         }
 
     }
-
 </script>    
 </asp:Content>
 
