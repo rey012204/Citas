@@ -42,7 +42,6 @@
         EventClickJavaScript="ShowPopup(e.id());"
      >
     </DayPilot:DayPilotCalendar>
-
     <div class="modal fade" id="apptPopup">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -60,39 +59,53 @@
                                     <tr>
                                         <td>Start:</td>
                                         <td>
-                                            <input type="hidden" id="txtstartval" />
+                                            
                                             <input type="text" id="txtstart" readonly />
+                                        </td>
+                                        <td>
+                                            <input type="hidden" id="txtstartval" />
                                         </td>
                                     </tr>
                                    <tr>
                                         <td>End:</td>
                                         <td>
-                                            <input type="hidden" id="txtendval" />
+                                            
                                             <input type="text" id="txtend" readonly />
                                         </td>
+                                       <td>
+                                           <input type="hidden" id="txtendval" />
+                                       </td>
                                     </tr>
                                     <tr>
                                         <td>Location:</td>
                                         <td>
-                                            <select name="selectlocation" id="selectlocation"></select>
+                                            <input type="text" id="txtlocation" readonly />
+                                            <%--<select name="selectlocation" id="selectlocation"></select>--%>
                                         </td>
+                                        <td></td>
                                     </tr>
                                     <tr>
                                         <td>Consultant:</td>
                                         <td>
-                                            <select name="selectconsultant" id="selectconsultant"></select>
+                                            <input type="text" id="txtconsultant" readonly />
+                                            <%--<select name="selectconsultant" id="selectconsultant"></select>--%>
                                         </td>
+                                        <td></td>
                                     </tr>
                                     <tr>
                                         <td>Service:</td>
                                          <td>
                                             <select name="selectservice" id="selectservice"></select>
-                                        </td>                       
+                                        </td> 
+                                        <td></td>
                                     </tr>
                                     <tr>
                                         <td>First Name:</td>
                                         <td>
                                             <input type="text" id="txtfirstname" />
+                                        </td>
+                                        <td style="text-align:center;padding-left:5px;">
+                                            <span id="reqfirstname" style="color:red;font-weight: bold;font-size:medium;">*</span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -100,16 +113,23 @@
                                         <td>
                                             <input type="text" id="txtlastname" />
                                         </td>
+                                        <td style="text-align:center;padding-left:5px;">
+                                            <span id="reqlastname" style="color:red;font-weight: bold;font-size:medium;">*</span>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>Phone No:</td>
                                         <td>
-                                            <input type="text" id="txtphone" />
+                                            <input type="tel" id="txtphone" name="txtphone" />
+                                            <%--<input type="tel" title="phoneno" id="txtphone" name="phone" placeholder="123-456-7890" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required><br><br>--%>
+                                        </td>
+                                        <td style="text-align:center;padding-left:5px;">
+                                            <span id="reqphone" style="color:red;font-weight: bold;font-size:medium;">*</span>
                                         </td>
                                     </tr>
                                 </table>
                             </td>
-                            <td valign="top" style="padding-left:10px">
+                            <td valign="top" style="padding-left:5px">
                                 <table>
                                     <tr>
                                         <td>Notes:</td>
@@ -166,6 +186,17 @@
             autoclose: true,
         };
         date_input.datepicker(options);
+        //$(function () {
+        //    $('#txtphone').usPhoneFormat();
+        //});
+        //$(function () {
+        //    $('#txtphone').usPhoneFormat({
+        //    format: '(xxx) xxx-xxxx'
+        //    });
+        //});
+        //$("input[name='phone']").keyup(function () {
+        //    $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d)+$/, "($1)$2-$3"));
+        //});
     })
     function ShowPopup(id) {
             $.ajax({
@@ -185,14 +216,18 @@
                     $("#txtstart").val(startformat);
                     $("#txtendval").val(appt.EndDateTime.valueOf());
                     //$("#txtend").val(appt.EndDateTime.toString());
+                    $("#txtlocation").val(appt.LocationName);
+                    $("#txtconsultant").val(appt.ConsultantName);
                     $("#txtend").val(endformat);
                     $("#txtfirstname").val(appt.FirstName);
                     $("#txtlastname").val(appt.LastName);
                     $("#txtphone").val(appt.Phone);
                     $("#txtnote").val(appt.Note);
-                    PopulateDDL($("#selectlocation"), appt.LocationList, appt.LocationId);
-                    PopulateDDL($("#selectconsultant"), appt.ConsultantList, appt.ConsultantId);
+                    //PopulateDDL($("#selectlocation"), appt.LocationList, appt.LocationId);
+                    //PopulateDDL($("#selectconsultant"), appt.ConsultantList, appt.ConsultantId);
                     PopulateDDL($("#selectservice"), appt.ServiceList, appt.ServiceId);
+                    ShowHideRequired();
+
                     $("#btnShowPopup").click();
                 },
                 error: function (e) {
@@ -200,15 +235,95 @@
                 }
             });
     }
+    function ShowPopupNew(start, end, resource) {
+        try {
+            var startformat = formatDateTime(new Date(start.valueOf()));
+            var endformat = formatDateTime(new Date(end.valueOf()));
+            $("#apptid").val(0);
+            $("#txtstartval").val(start.valueOf());
+            //$("#txtstart").val(start.toStringSortable());
+            $("#txtstart").val(startformat);
+            $("#txtendval").val(end.valueOf());
+            //$("#txtend").val(end.toStringSortable());
+            $("#txtend").val(endformat);
+            $("#txtfirstname").val('');
+            $("#txtlastname").val('');
+            $("#txtphone").val('');
+            $("#txtnote").val('');
+            //$("#selectlocation").empty();
+            //$("#selectconsultant").empty();
+            $("#selectservice").empty();
+
+            var loc = document.getElementById("<%=ddlLocation.ClientID%>");
+            //var locvalue = loc.options[loc.selectedIndex].value;
+            var loctext = loc.options[loc.selectedIndex].text;
+            $("#txtlocation").val(loctext);
+            //$("#selectlocation").append("<option value='" + locvalue + "' selected>" + loctext + "</option>");
+
+            var cons = document.getElementById("<%=ddlConsultant.ClientID%>");
+            //var consvalue = con.options[con.selectedIndex].value;
+            var constext = cons.options[cons.selectedIndex].text;
+            $("#txtconsultant").val(constext);
+            //$("#selectconsultant").append("<option value='" + convalue + "' selected>" + context + "</option>");
+
+            var serv = document.getElementById("<%=ddlService.ClientID%>");
+            var first = true;
+            for (var i = 0; i < serv.length; i++) {
+                var selected = '';
+                if (first) {
+                    selected = 'selected';
+                    first = false;
+                }
+
+                $("#selectservice").append("<option value='" + serv[i].value + "' " + selected + ">" + serv[i].text + "</option>");
+            }
+
+            $("#reqfirstname").hide();
+            $("#reqlastname").hide();
+            $("#reqphone").hide();
+
+            $("#btnShowPopup").click();
+        }
+        catch (e) {
+            alert("Error: " + e)
+        }
+
+    }
+    function ShowHideRequired() {
+        if ($("#txtfirstname").val() == "") $("#reqfirstname").show();
+        else $("#reqfirstname").hide();
+        if ($("#txtlastname").val() == "") $("#reqlastname").show();
+        else $("#reqlastname").hide();
+        if ($("#txtphone").val() == "") $("#reqphone").show();
+        else $("#reqphone").hide();
+    }
     function SaveAppointment() {
+        var valid = true;
+        if ($("#txtfirstname").val() == "") {
+            valid = false;
+        }
+        if ($("#txtlastname").val() == "") {
+            valid = false;
+        }
+        if ($("#txtphone").val() == "") {
+            valid = false;
+        }
+
+        ShowHideRequired();
+
+        if (valid == false) {
+            return false;
+        }
         var apptdata = new Object();
         var d1 = new Date($("#txtstartval").val());
         var d2 = new Date($("#txtendval").val());
         apptdata.StartDateTime = d1;
         apptdata.EndDateTime = d2;
         apptdata.Id = Number($("#apptid").val());
-        apptdata.LocationId = Number($("#selectlocation").val());
-        apptdata.ConsultantId = Number($("#selectconsultant").val());
+        var loc = document.getElementById("<%=ddlLocation.ClientID%>");
+        apptdata.LocationId = Number(loc.options[loc.selectedIndex].value);
+        var cons = document.getElementById("<%=ddlConsultant.ClientID%>");
+        apptdata.ConsultantId = Number(cons.options[cons.selectedIndex].value);
         apptdata.FirstName = $("#txtfirstname").val();
         apptdata.LastName = $("#txtlastname").val();
         apptdata.Phone = $("#txtphone").val();
@@ -221,6 +336,8 @@
         else {
             PutAppt(apptdata);
         }
+
+        return true;
     }
     function PostAppt(apptdata) {
         try {
@@ -310,6 +427,7 @@
     }
     function PopulateDDL(ddl, list, id) {
         try {
+            ddl.empty();
             for (k = 0; k < list.length; k++) {
                 var s = list[k];
                 var selected = '';
@@ -321,55 +439,7 @@
             console.log("Error: " + e)
         }
     }
-    function ShowPopupNew(start, end, resource) {
-        try
-        {
-            var startformat = formatDateTime(new Date(start.valueOf()));
-            var endformat = formatDateTime(new Date(end.valueOf()));
-            $("#apptid").val(0);
-            $("#txtstartval").val(start.valueOf());
-            //$("#txtstart").val(start.toStringSortable());
-            $("#txtstart").val(startformat);
-            $("#txtendval").val(end.valueOf());
-            //$("#txtend").val(end.toStringSortable());
-            $("#txtend").val(endformat);
-            $("#txtfirstname").val('');
-            $("#txtlastname").val('');
-            $("#txtphone").val('');
-            $("#txtnote").val('');
-            $("#selectlocation").empty();
-            $("#selectconsultant").empty();
-            $("#selectservice").empty();
-
-            var loc = document.getElementById("<%=ddlLocation.ClientID%>");
-            var locvalue = loc.options[loc.selectedIndex].value;
-            var loctext = loc.options[loc.selectedIndex].text;
-            $("#selectlocation").append("<option value='" + locvalue + "' selected>" + loctext + "</option>");
-
-            var con = document.getElementById("<%=ddlConsultant.ClientID%>");
-            var convalue = con.options[con.selectedIndex].value;
-            var context = con.options[con.selectedIndex].text;
-            $("#selectconsultant").append("<option value='" + convalue + "' selected>" + context + "</option>");
-
-            var serv = document.getElementById("<%=ddlService.ClientID%>");
-            var first = true;
-            for (var i = 0; i < serv.length; i++) {
-                var selected = '';
-                if (first) {
-                    selected = 'selected';
-                    first = false;
-                }
-
-                $("#selectservice").append("<option value='" + serv[i].value + "' " + selected + ">" + serv[i].text + "</option>");
-            }
-
-            $("#btnShowPopup").click();
-        }
-        catch (e) {
-            alert("Error: " + e)
-        }
-
-    }
+    
 </script>    
 </asp:Content>
 

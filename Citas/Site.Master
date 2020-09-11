@@ -14,6 +14,7 @@
     <webopt:bundlereference runat="server" path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <script src="Scripts/citas.js"></script>
+    <script src="Scripts/jquery-input-mask-phone-number.js"></script>
 </head>
 <body>
     <form runat="server">

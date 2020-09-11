@@ -25,12 +25,10 @@ namespace Citas.Controllers.Api
                 {
                     List<SessionTime> sessions = callTraxDb.SessionTimes.Where(st => st.ConsultantId == consId).ToList();
                     List<object> services = new List<object>();
-                    List<object> locations = new List<object>();
-                    ClientLocation location = callTraxDb.ClientLocations.Where(l => l.ClientLocationId == locId).FirstOrDefault();
-                    locations.Add(new { value = locId, text = location.LocationName.Trim() });
-                    Consultant consultant = callTraxDb.Consultants.Where(c => c.ConsultantId == consId).FirstOrDefault();
-                    List<object> consultants = new List<object>();
-                    consultants.Add(new { value = consId, text = consultant.ConsultantName.Trim() });
+                    ClientLocation loc = callTraxDb.ClientLocations.Where(l => l.ClientLocationId == locId).FirstOrDefault();
+                    string locName = (loc != null)?"":loc.LocationName;
+                    Consultant cons = callTraxDb.Consultants.Where(c => c.ConsultantId == consId).FirstOrDefault();
+                    string consName = (cons != null)?"":cons.ConsultantName;
                     bool first = true;
                     long selService = 0;
                     foreach (SessionTime session in sessions)
@@ -47,14 +45,12 @@ namespace Citas.Controllers.Api
                             Id = 0,
                             StartDateTime = start,
                             EndDateTime = end,
-                            StartTime = start.ToString("hh:mm tt"),
-                            EndTime = end.ToString("hh:mm tt"),
                             FirstName = "",
                             LastName = "",
                             Phone = "",
                             LocationId = locId,
-                            LocationList = locations,
-                            ConsultantList = consultants,
+                            LocationName = locName,
+                            ConsultantName = consName,
                             ConsultantId = consId,
                             ServiceId = selService,
                             ServiceList = services,
@@ -100,9 +96,9 @@ namespace Citas.Controllers.Api
                             LastName = appt.CustomerLastName.Trim(),
                             Phone = appt.CustomerPhoneNumber.Trim(),
                             LocationId = appt.ClientLocation.ClientLocationId,
-                            LocationList = locations,
-                            ConsultantList= consultants,
+                            LocationName = appt.ClientLocation.LocationName.Trim(),
                             ConsultantId = appt.Consultant.ConsultantId,
+                            ConsultantName = appt.Consultant.ConsultantName.Trim(),
                             ServiceId = appt.ServiceCategory.ServiceCategoryId,
                             ServiceList = services,
                             Note = appt.Note 

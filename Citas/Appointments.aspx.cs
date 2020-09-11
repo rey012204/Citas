@@ -136,10 +136,16 @@ namespace Citas
 
         protected void DayPilotCalendar1_BeforeEventRender(object sender, DayPilot.Web.Ui.Events.Calendar.BeforeEventRenderEventArgs e)
         {
-            string color = e.DataItem["color"] as string;
-            if (!String.IsNullOrEmpty(color))
+            if(e.DataItem != null)
             {
-                e.DurationBarColor = color;
+                if(e.DataItem.Source != null)
+                {
+                    string color = e.DataItem["color"] as string;
+                    if (!String.IsNullOrEmpty(color))
+                    {
+                        e.DurationBarColor = color;
+                    }
+                }
             }
         }
         protected void PopulateDDL()

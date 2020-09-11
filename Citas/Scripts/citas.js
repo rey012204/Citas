@@ -30,3 +30,26 @@ function formatDate(date) {
 
     return [month, day, year].join('/');
 }
+function formatPhone(objFormField) {
+    var sMask = "01234567890x";
+    var KeyTyped = String.fromCharCode(window.event.keyCode);
+
+    if (sMask.indexOf(KeyTyped.toString()) == -1) {
+        window.event.preventDefault();
+        //window.event.keyCode = 0;
+        return false;
+    }
+
+    intFieldLength = objFormField.value.length;
+
+    if (intFieldLength == 3) {
+        objFormField.value = "(" + objFormField.value + ") ";
+        return false;
+    }
+
+    if (intFieldLength >= 9 && intFieldLength <= 10) {
+        objFormField.value = objFormField.value + "-";
+
+        return false;
+    }
+}
