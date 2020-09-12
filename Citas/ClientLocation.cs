@@ -24,6 +24,8 @@ namespace Citas
         public long ClientLocationId { get; set; }
         public long ClientId { get; set; }
         public string LocationName { get; set; }
+        public short BusinessBeginsHour { get; set; }
+        public short BusinessEndsHour { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Appointment> Appointments { get; set; }

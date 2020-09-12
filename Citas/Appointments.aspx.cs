@@ -27,6 +27,7 @@ namespace Citas
             if (!IsPostBack)
             {
                 PopulateDDL();
+                SetLocationBussinessHours();
                 LoadCalendar();
                 txtDate.Text = DateTime.Today.ToString("yyyy-MM-dd");
             }
@@ -40,6 +41,16 @@ namespace Citas
                 {
                     Session["CalendarStartDate"] = firstDayOfWeek(DateTime.Now, DayOfWeek.Sunday);
                 }
+                if(Session["BusinessBeginsHour"] == null)
+                {
+                    Session["BusinessBeginsHour"] = 9;
+                }
+                if (Session["BusinessEndsHour"] == null)
+                {
+                    Session["BusinessEndsHour"] = 18;
+                }
+                DayPilotCalendar1.BusinessBeginsHour = (short)Session["BusinessBeginsHour"];
+                DayPilotCalendar1.BusinessEndsHour = (short)Session["BusinessEndsHour"];
                 DayPilotCalendar1.StartDate = (DateTime)Session["CalendarStartDate"];
                 Session["CalendarData"] = CalendarData.GetData(ddlLocation.SelectedValue, ddlConsultant.SelectedValue, DayPilotCalendar1.StartDate, DayPilotCalendar1.StartDate.AddDays(7));
                 table = (DataTable)Session["CalendarData"];
@@ -252,9 +263,31 @@ namespace Citas
 
         protected void ddlLocation_SelectedIndexChanged(object sender, EventArgs e)
         {
+            SetLocationBussinessHours();
             LoadCalendar();
         }
+        protected void SetLocationBussinessHours()
+        {
+            try
+            {
+                Session["BusinessBeginsHour"] = 9;
+                Session["BusinessEndsHour"] = 18;
+                using (CallTraxEntities callTraxDb = new CallTraxEntities())
+                {
+                    ClientLocation loc = callTraxDb.ClientLocations.Where(l => l.ClientLocationId.ToString() == ddlLocation.SelectedValue).FirstOrDefault();
+                    if(loc != null)
+                    {
+                        Session["BusinessBeginsHour"] = loc.BusinessBeginsHour;
+                        Session["BusinessEndsHour"] = loc.BusinessEndsHour;
+                    }
+                }
+            }
+            catch (Exception)
+            {
 
+                throw;
+            }
+        }
         protected void txtDate_TextChanged(object sender, EventArgs e)
         {
             try

@@ -203,6 +203,8 @@
           <Property Name="ClientLocationId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ClientId" Type="bigint" Nullable="false" />
           <Property Name="LocationName" Type="nchar" MaxLength="50" Nullable="false" />
+          <Property Name="BusinessBeginsHour" Type="smallint" Nullable="false" />
+          <Property Name="BusinessEndsHour" Type="smallint" Nullable="false" />
         </EntityType>
         <EntityType Name="ClientUser">
           <Key>
@@ -1147,6 +1149,8 @@
           <NavigationProperty Name="Appointments" Relationship="Self.FK_Appointment_ClientLocation" FromRole="ClientLocation" ToRole="Appointment" />
           <NavigationProperty Name="Client" Relationship="Self.FK_ClientLocation_Client" FromRole="ClientLocation" ToRole="Client" />
           <NavigationProperty Name="ConsultantSchedules" Relationship="Self.FK_ConsultantSchedule_ClientLocation" FromRole="ClientLocation" ToRole="ConsultantSchedule" />
+          <Property Name="BusinessBeginsHour" Type="Int16" Nullable="false" />
+          <Property Name="BusinessEndsHour" Type="Int16" Nullable="false" />
         </EntityType>
         <EntityType Name="ClientUser">
           <Key>
@@ -2062,6 +2066,8 @@
           <EntitySetMapping Name="ClientLocations">
             <EntityTypeMapping TypeName="CallTraxModel.ClientLocation">
               <MappingFragment StoreEntitySet="ClientLocation">
+                <ScalarProperty Name="BusinessEndsHour" ColumnName="BusinessEndsHour" />
+                <ScalarProperty Name="BusinessBeginsHour" ColumnName="BusinessBeginsHour" />
                 <ScalarProperty Name="ClientLocationId" ColumnName="ClientLocationId" />
                 <ScalarProperty Name="ClientId" ColumnName="ClientId" />
                 <ScalarProperty Name="LocationName" ColumnName="LocationName" />
