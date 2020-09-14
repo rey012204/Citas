@@ -79,25 +79,29 @@
                                     <tr>
                                         <td>Location:</td>
                                         <td>
-                                            <input type="text" id="txtlocation" readonly />
-                                            <%--<select name="selectlocation" id="selectlocation"></select>--%>
+                                            <select name="selectlocation" id="selectlocation"></select>
                                         </td>
-                                        <td></td>
+                                        <td style="text-align:center;padding-left:5px;">
+                                            <span id="reqlocation" style="color:red;font-weight: bold;font-size:medium;">*</span>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>Consultant:</td>
                                         <td>
-                                            <input type="text" id="txtconsultant" readonly />
-                                            <%--<select name="selectconsultant" id="selectconsultant"></select>--%>
+                                            <select name="selectconsultant" id="selectconsultant"></select>
                                         </td>
-                                        <td></td>
+                                        <td style="text-align:center;padding-left:5px;">
+                                            <span id="reqconsultant" style="color:red;font-weight: bold;font-size:medium;">*</span>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>Service:</td>
                                          <td>
                                             <select name="selectservice" id="selectservice"></select>
                                         </td> 
-                                        <td></td>
+                                        <td style="text-align:center;padding-left:5px;">
+                                            <span id="reqservice" style="color:red;font-weight: bold;font-size:medium;">*</span>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>First Name:</td>
@@ -212,19 +216,15 @@
                     var endformat = formatDateTime(new Date(appt.EndDateTime.valueOf()));
                     $("#apptid").val(id);
                     $("#txtstartval").val(appt.StartDateTime.valueOf());
-                    //$("#txtstart").val(appt.StartDateTime.toString());
                     $("#txtstart").val(startformat);
                     $("#txtendval").val(appt.EndDateTime.valueOf());
-                    //$("#txtend").val(appt.EndDateTime.toString());
-                    $("#txtlocation").val(appt.LocationName);
-                    $("#txtconsultant").val(appt.ConsultantName);
                     $("#txtend").val(endformat);
                     $("#txtfirstname").val(appt.FirstName);
                     $("#txtlastname").val(appt.LastName);
                     $("#txtphone").val(appt.Phone);
                     $("#txtnote").val(appt.Note);
-                    //PopulateDDL($("#selectlocation"), appt.LocationList, appt.LocationId);
-                    //PopulateDDL($("#selectconsultant"), appt.ConsultantList, appt.ConsultantId);
+                    PopulateDDL($("#selectlocation"), appt.LocationList, appt.LocationId);
+                    PopulateDDL($("#selectconsultant"), appt.ConsultantList, appt.ConsultantId);
                     PopulateDDL($("#selectservice"), appt.ServiceList, appt.ServiceId);
                     ShowHideRequired();
 
@@ -241,43 +241,35 @@
             var endformat = formatDateTime(new Date(end.valueOf()));
             $("#apptid").val(0);
             $("#txtstartval").val(start.valueOf());
-            //$("#txtstart").val(start.toStringSortable());
             $("#txtstart").val(startformat);
             $("#txtendval").val(end.valueOf());
-            //$("#txtend").val(end.toStringSortable());
             $("#txtend").val(endformat);
             $("#txtfirstname").val('');
             $("#txtlastname").val('');
             $("#txtphone").val('');
             $("#txtnote").val('');
-            //$("#selectlocation").empty();
-            //$("#selectconsultant").empty();
             $("#selectservice").empty();
 
             var loc = document.getElementById("<%=ddlLocation.ClientID%>");
-            //var locvalue = loc.options[loc.selectedIndex].value;
             var loctext = loc.options[loc.selectedIndex].text;
             $("#txtlocation").val(loctext);
-            //$("#selectlocation").append("<option value='" + locvalue + "' selected>" + loctext + "</option>");
 
             var cons = document.getElementById("<%=ddlConsultant.ClientID%>");
-            //var consvalue = con.options[con.selectedIndex].value;
             var constext = cons.options[cons.selectedIndex].text;
             $("#txtconsultant").val(constext);
-            //$("#selectconsultant").append("<option value='" + convalue + "' selected>" + context + "</option>");
+
+            var loc = document.getElementById("<%=ddlLocation.ClientID%>");
+            CopyDDL(loc, $("#selectlocation"), "-- Select Location --")
+
+            var cons = document.getElementById("<%=ddlConsultant.ClientID%>");
+            CopyDDL(cons, $("#selectconsultant"), "-- Select Consultant --")
 
             var serv = document.getElementById("<%=ddlService.ClientID%>");
-            var first = true;
-            for (var i = 0; i < serv.length; i++) {
-                var selected = '';
-                if (first) {
-                    selected = 'selected';
-                    first = false;
-                }
+            CopyDDL(serv, $("#selectservice"), "-- Select Service --")
 
-                $("#selectservice").append("<option value='" + serv[i].value + "' " + selected + ">" + serv[i].text + "</option>");
-            }
-
+            $("#reqlocation").hide();
+            $("#reqconsultant").hide();
+            $("#reqservice").hide();
             $("#reqfirstname").hide();
             $("#reqlastname").hide();
             $("#reqphone").hide();
@@ -290,6 +282,12 @@
 
     }
     function ShowHideRequired() {
+        if ($("#selectlocation").val() == 0) $("#reqlocation").show();
+        else $("#reqlocation").hide();
+        if ($("#selectconsultant").val() == 0) $("#reqconsultant").show();
+        else $("#reqconsultant").hide();
+        if ($("#selectservice").val() == 0) $("#reqservice").show();
+        else $("#reqservice").hide();
         if ($("#txtfirstname").val() == "") $("#reqfirstname").show();
         else $("#reqfirstname").hide();
         if ($("#txtlastname").val() == "") $("#reqlastname").show();
@@ -320,10 +318,8 @@
         apptdata.StartDateTime = d1;
         apptdata.EndDateTime = d2;
         apptdata.Id = Number($("#apptid").val());
-        var loc = document.getElementById("<%=ddlLocation.ClientID%>");
-        apptdata.LocationId = Number(loc.options[loc.selectedIndex].value);
-        var cons = document.getElementById("<%=ddlConsultant.ClientID%>");
-        apptdata.ConsultantId = Number(cons.options[cons.selectedIndex].value);
+        apptdata.LocationId = Number($("#selectlocation").val());
+        apptdata.ConsultantId = Number($("#selectconsultant").val());
         apptdata.FirstName = $("#txtfirstname").val();
         apptdata.LastName = $("#txtlastname").val();
         apptdata.Phone = $("#txtphone").val();
@@ -439,7 +435,17 @@
             console.log("Error: " + e)
         }
     }
-    
+    function CopyDDL(fromddl, toddl, seltxt) {
+        try {
+            toddl.append(("<option value='" + 0 + "' selected>" + seltxt + "</option>"))
+            for (var i = 0; i < fromddl.length; i++) {
+                toddl.append("<option value='" + fromddl[i].value + "'>" + fromddl[i].text + "</option>");
+            }
+        } catch (e) {
+            console.log("Error: " + e)
+        }
+    }
+   
 </script>    
 </asp:Content>
 

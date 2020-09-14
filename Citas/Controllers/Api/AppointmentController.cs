@@ -1,4 +1,5 @@
 ﻿using Citas.Models;
+using Microsoft.AspNet.Identity;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -23,12 +24,26 @@ namespace Citas.Controllers.Api
                 long.TryParse(consultantId, out consId);
                 using (CallTraxEntities callTraxDb = new CallTraxEntities())
                 {
+                    string userID = User.Identity.GetUserId();
+                    ClientUser user = callTraxDb.ClientUsers.Where(u => u.AspNetUserId == userID).FirstOrDefault();
+                    List<object> listLoc = new List<object>();
+                    List<object> listCons = new List<object>();
+                    if (user != null)
+                    {
+                        List<ClientLocation> listlocations = callTraxDb.ClientLocations.Where(l => l.ClientId == user.ClientId).ToList();
+                        List<Consultant> listconsultants = callTraxDb.Consultants.Where(c => c.ClientId == user.ClientId).ToList();
+
+                        foreach (ClientLocation loc in listlocations)
+                        {
+                            listLoc.Add(new { value = loc.ClientLocationId.ToString(), text = loc.LocationName.Trim() });
+                        }
+                        foreach (Consultant cons in listconsultants)
+                        {
+                            listCons.Add(new { value = cons.ConsultantId, text = cons.ConsultantName.Trim() });
+                        }
+                    }
                     List<SessionTime> sessions = callTraxDb.SessionTimes.Where(st => st.ConsultantId == consId).ToList();
                     List<object> services = new List<object>();
-                    ClientLocation loc = callTraxDb.ClientLocations.Where(l => l.ClientLocationId == locId).FirstOrDefault();
-                    string locName = (loc != null)?"":loc.LocationName;
-                    Consultant cons = callTraxDb.Consultants.Where(c => c.ConsultantId == consId).FirstOrDefault();
-                    string consName = (cons != null)?"":cons.ConsultantName;
                     bool first = true;
                     long selService = 0;
                     foreach (SessionTime session in sessions)
@@ -49,10 +64,10 @@ namespace Citas.Controllers.Api
                             LastName = "",
                             Phone = "",
                             LocationId = locId,
-                            LocationName = locName,
-                            ConsultantName = consName,
                             ConsultantId = consId,
                             ServiceId = selService,
+                            LocationList = listLoc,
+                            ConsultantList = listCons,
                             ServiceList = services,
                             Note = ""
                         };
@@ -75,8 +90,27 @@ namespace Citas.Controllers.Api
                 using (CallTraxEntities callTraxDb = new CallTraxEntities())
                 {
                     Appointment appt = callTraxDb.Appointments.Where(a => a.AppointmentId == id).FirstOrDefault();
+                    
                     if(appt != null)
                     {
+                        string userID = User.Identity.GetUserId();
+                        ClientUser user = callTraxDb.ClientUsers.Where(u => u.AspNetUserId == userID).FirstOrDefault();
+                        List<object> listLoc = new List<object>();
+                        List<object> listCons = new List<object>();
+                        if (user != null)
+                        {
+                            List<ClientLocation> listlocations = callTraxDb.ClientLocations.Where(l => l.ClientId == user.ClientId).ToList();
+                            List <Consultant> listconsultants = callTraxDb.Consultants.Where(c => c.ClientId == user.ClientId).ToList();
+
+                            foreach (ClientLocation loc in listlocations)
+                            {
+                                listLoc.Add(new { value = loc.ClientLocationId.ToString(), text = loc.LocationName.Trim() });
+                            }
+                            foreach (Consultant cons in listconsultants)
+                            {
+                                listCons.Add(new { value = cons.ConsultantId, text = cons.ConsultantName.Trim() });
+                            }
+                        }
                         List<SessionTime> sessions = callTraxDb.SessionTimes.Where(st => st.ConsultantId == appt.ConsultantId).ToList();
                         List<object> services = new List<object>();
                         List<object> locations = new List<object>();
@@ -96,10 +130,10 @@ namespace Citas.Controllers.Api
                             LastName = appt.CustomerLastName.Trim(),
                             Phone = appt.CustomerPhoneNumber.Trim(),
                             LocationId = appt.ClientLocation.ClientLocationId,
-                            LocationName = appt.ClientLocation.LocationName.Trim(),
                             ConsultantId = appt.Consultant.ConsultantId,
-                            ConsultantName = appt.Consultant.ConsultantName.Trim(),
                             ServiceId = appt.ServiceCategory.ServiceCategoryId,
+                            LocationList = listLoc,
+                            ConsultantList = listCons,
                             ServiceList = services,
                             Note = appt.Note 
                         };
@@ -161,6 +195,8 @@ namespace Citas.Controllers.Api
                     Appointment appointment = callTraxDb.Appointments.Where(a => a.AppointmentId == appt.Id).FirstOrDefault();
                     if (appointment != null)
                     {
+                        appointment.LocationId = appt.LocationId;
+                        appointment.ConsultantId = appt.ConsultantId;
                         appointment.CustomerFirstName = appt.FirstName;
                         appointment.CustomerLastName = appt.LastName;
                         appointment.CustomerPhoneNumber = appt.Phone;
