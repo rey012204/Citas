@@ -233,13 +233,13 @@
             $("#txtconsultant").val(constext);
 
             var loc = document.getElementById("<%=ddlLocation.ClientID%>");
-            CopyDDL(loc, $("#selectlocation"), "-- Select Location --")
+            CopyDDL(loc, $("#selectlocation"), loc.options[loc.selectedIndex].value, null)
 
             var cons = document.getElementById("<%=ddlConsultant.ClientID%>");
-            CopyDDL(cons, $("#selectconsultant"), "-- Select Consultant --")
+            CopyDDL(cons, $("#selectconsultant"), cons.options[cons.selectedIndex].value, null)
 
             var serv = document.getElementById("<%=ddlService.ClientID%>");
-            CopyDDL(serv, $("#selectservice"), "-- Select Service --")
+            CopyDDL(serv, $("#selectservice"), 0, "-- Select Service --")
 
             $("#reqlocation").hide();
             $("#reqconsultant").hide();
@@ -413,11 +413,18 @@
             console.log("Error: " + e)
         }
     }
-    function CopyDDL(fromddl, toddl, seltxt) {
+    function CopyDDL(fromddl, toddl, selval, seltxt) {
         try {
-            toddl.append(("<option value='" + 0 + "' selected>" + seltxt + "</option>"))
+            if (seltxt != null) {
+                toddl.append(("<option value='" + selval + "' selected>" + seltxt + "</option>"));
+            }
+            
             for (var i = 0; i < fromddl.length; i++) {
-                toddl.append("<option value='" + fromddl[i].value + "'>" + fromddl[i].text + "</option>");
+                var selected = '';
+                if (seltxt == null && fromddl[i].value == selval) {
+                    selected = ' selected';
+                }
+                toddl.append("<option value='" + fromddl[i].value + "'" + selected + ">" + fromddl[i].text + "</option>");
             }
         } catch (e) {
             console.log("Error: " + e)
