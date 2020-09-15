@@ -197,6 +197,8 @@ namespace Citas.Controllers.Api
                     {
                         appointment.LocationId = appt.LocationId;
                         appointment.ConsultantId = appt.ConsultantId;
+                        appointment.StartDateTime = appt.StartDateTime.ToLocalTime();
+                        appointment.EndDateTime = appt.EndDateTime.ToLocalTime();
                         appointment.CustomerFirstName = appt.FirstName;
                         appointment.CustomerLastName = appt.LastName;
                         appointment.CustomerPhoneNumber = appt.Phone;

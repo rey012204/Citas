@@ -52,100 +52,65 @@
                     <input type="hidden" id="apptid" name="apptid" value="0">
                 </div>
                 <div class="modal-body">
-                    <table>
-                        <tr style="padding:5px">
+                    <table class="appointment-table">
+                       <tr>
+                            <td>Date:</td>
                             <td>
-                                <table>
-                                    <tr>
-                                        <td>Start:</td>
-                                        <td>
-                                            
-                                            <input type="text" id="txtstart" readonly />
-                                        </td>
-                                        <td>
-                                            <input type="hidden" id="txtstartval" />
-                                        </td>
-                                    </tr>
-                                   <tr>
-                                        <td>End:</td>
-                                        <td>
-                                            
-                                            <input type="text" id="txtend" readonly />
-                                        </td>
-                                       <td>
-                                           <input type="hidden" id="txtendval" />
-                                       </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Location:</td>
-                                        <td>
-                                            <select name="selectlocation" id="selectlocation"></select>
-                                        </td>
-                                        <td style="text-align:center;padding-left:5px;">
-                                            <span id="reqlocation" style="color:red;font-weight: bold;font-size:medium;">*</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Consultant:</td>
-                                        <td>
-                                            <select name="selectconsultant" id="selectconsultant"></select>
-                                        </td>
-                                        <td style="text-align:center;padding-left:5px;">
-                                            <span id="reqconsultant" style="color:red;font-weight: bold;font-size:medium;">*</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Service:</td>
-                                         <td>
-                                            <select name="selectservice" id="selectservice"></select>
-                                        </td> 
-                                        <td style="text-align:center;padding-left:5px;">
-                                            <span id="reqservice" style="color:red;font-weight: bold;font-size:medium;">*</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>First Name:</td>
-                                        <td>
-                                            <input type="text" id="txtfirstname" />
-                                        </td>
-                                        <td style="text-align:center;padding-left:5px;">
-                                            <span id="reqfirstname" style="color:red;font-weight: bold;font-size:medium;">*</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Last Name:</td>
-                                        <td>
-                                            <input type="text" id="txtlastname" />
-                                        </td>
-                                        <td style="text-align:center;padding-left:5px;">
-                                            <span id="reqlastname" style="color:red;font-weight: bold;font-size:medium;">*</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Phone No:</td>
-                                        <td>
-                                            <input type="tel" id="txtphone" name="txtphone" />
-                                            <%--<input type="tel" title="phoneno" id="txtphone" name="phone" placeholder="123-456-7890" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required><br><br>--%>
-                                        </td>
-                                        <td style="text-align:center;padding-left:5px;">
-                                            <span id="reqphone" style="color:red;font-weight: bold;font-size:medium;">*</span>
-                                        </td>
-                                    </tr>
-                                </table>
+                                <%--<input type="text" id="txtstart" readonly />--%>
+                                <input id="txtstartdate" type="date" />
+                                <input type="time" id="txtstarttime" name="txtstarttime"> to <input type="time" id="txtendtime" name="txtendtime">
+                                <input type="hidden" id="txtstartval" />
+                                <input type="hidden" id="txtendval" />                            
                             </td>
-                            <td valign="top" style="padding-left:5px">
-                                <table>
-                                    <tr>
-                                        <td>Notes:</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <textarea rows = "10" cols = "38" id = "txtnote"></textarea>
-                                        </td>
-                                    </tr>
-                                </table>
+                       </tr>
+                       <tr>
+                            <td>Location:</td>
+                            <td>
+                                <select name="selectlocation" id="selectlocation"></select>
+                                <span id="reqlocation" style="color:red;font-weight: bold;font-size:medium;"> * </span>
                             </td>
-                        </tr>
+                       </tr>
+                       <tr>
+                            <td>Consultant:</td>
+                            <td>
+                                <select name="selectconsultant" id="selectconsultant"></select>
+                                <span id="reqconsultant" style="color:red;font-weight: bold;font-size:medium;"> * </span>
+                            </td>
+                       </tr>
+                       <tr>
+                            <td>Service:</td>
+                            <td>
+                                <select name="selectservice" id="selectservice"></select>
+                                <span id="reqservice" style="color:red;font-weight: bold;font-size:medium;"> * </span>
+                            </td> 
+                       </tr>
+                       <tr>
+                            <td>First Name:</td>
+                            <td>
+                                 <input type="text" id="txtfirstname" />
+                                <span id="reqfirstname" style="color:red;font-weight: bold;font-size:medium;"> * </span>
+                            </td>
+                       </tr>
+                       <tr>
+                            <td>Last Name:</td>
+                            <td>
+                                 <input type="text" id="txtlastname" />
+                                <span id="reqlastname" style="color:red;font-weight: bold;font-size:medium;"> * </span>
+                            </td>
+                       </tr>
+                       <tr>
+                            <td>Phone No:</td>
+                            <td>
+                                <input type="tel" id="txtphone" name="txtphone" />
+                                <span id="reqphone" style="color:red;font-weight: bold;font-size:medium;"> * </span>
+                            </td>
+                       </tr>
+                       <tr>
+                            <td>Notes:</td>
+                            <td>
+                                <textarea rows = "8" cols = "60" id = "txtnote"></textarea>
+                            </td>
+                       </tr>
                     </table>
                 </div>
                 <div class="modal-footer">
@@ -212,13 +177,17 @@
                 cache: "false",
                 success: function (response) {
                     var appt = $.parseJSON(response);
-                    var startformat = formatDateTime(new Date(appt.StartDateTime.valueOf()));
-                    var endformat = formatDateTime(new Date(appt.EndDateTime.valueOf()));
+                    var d1 = new Date(appt.StartDateTime.valueOf())
+                    var d2 = new Date(appt.EndDateTime.valueOf())
+                    var startymd = formatDate2(d1);
+                    var starttime = formatTime24(d1);
+                    var endtime = formatTime24(d2);
                     $("#apptid").val(id);
                     $("#txtstartval").val(appt.StartDateTime.valueOf());
-                    $("#txtstart").val(startformat);
+                    $("#txtstartdate").val(startymd);
+                    $("#txtstarttime").val(starttime);
                     $("#txtendval").val(appt.EndDateTime.valueOf());
-                    $("#txtend").val(endformat);
+                    $("#txtendtime").val(endtime);
                     $("#txtfirstname").val(appt.FirstName);
                     $("#txtlastname").val(appt.LastName);
                     $("#txtphone").val(appt.Phone);
@@ -237,13 +206,18 @@
     }
     function ShowPopupNew(start, end, resource) {
         try {
-            var startformat = formatDateTime(new Date(start.valueOf()));
-            var endformat = formatDateTime(new Date(end.valueOf()));
             $("#apptid").val(0);
+
+            var d1 = new Date(start.valueOf())
+            var d2 = new Date(end.valueOf())
+            var startymd = formatDate2(d1);
+            var starttime = formatTime24(d1);
+            var endtime = formatTime24(d2);
             $("#txtstartval").val(start.valueOf());
-            $("#txtstart").val(startformat);
             $("#txtendval").val(end.valueOf());
-            $("#txtend").val(endformat);
+            $("#txtstartdate").val(startymd);
+            $("#txtstarttime").val(starttime);
+            $("#txtendtime").val(endtime);
             $("#txtfirstname").val('');
             $("#txtlastname").val('');
             $("#txtphone").val('');
@@ -313,8 +287,12 @@
             return false;
         }
         var apptdata = new Object();
-        var d1 = new Date($("#txtstartval").val());
-        var d2 = new Date($("#txtendval").val());
+        //var d1 = new Date($("#txtstartval").val());
+        //var d2 = new Date($("#txtendval").val());
+        var datestring1 = $("#txtstartdate").val() + " " + $("#txtstarttime").val() + ":00"
+        var datestring2 = $("#txtstartdate").val() + " " + $("#txtendtime").val() + ":00"
+        var d1 = stringToDateTime(datestring1)
+        var d2 = stringToDateTime(datestring2)
         apptdata.StartDateTime = d1;
         apptdata.EndDateTime = d2;
         apptdata.Id = Number($("#apptid").val());

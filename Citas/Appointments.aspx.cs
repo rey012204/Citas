@@ -8,6 +8,7 @@ using System.Linq;
 using System.Web;
 using System.Web.DynamicData;
 using System.Web.Helpers;
+using System.Web.Http;
 using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI;
@@ -15,6 +16,7 @@ using System.Web.UI.WebControls;
 
 namespace Citas
 {
+    [Authorize]
     public partial class Appointments : System.Web.UI.Page
     {
         private DataTable table;
@@ -23,6 +25,10 @@ namespace Citas
         {
             //ClientScript.RegisterStartupScript(this.GetType(), "alert", "ShowPopup();", true);
             //this.lblMessage.Text = "Your Registration is done successfully. Our team will contact you shotly";
+            if(!Page.User.Identity.IsAuthenticated)
+            {
+                Response.Redirect("~/Account/Login?ReturnUrl=" + Server.UrlEncode(Request.Url.ToString()));
+            }
 
             if (!IsPostBack)
             {
@@ -49,8 +55,9 @@ namespace Citas
                 {
                     Session["BusinessEndsHour"] = 18;
                 }
-                DayPilotCalendar1.BusinessBeginsHour = (short)Session["BusinessBeginsHour"];
-                DayPilotCalendar1.BusinessEndsHour = (short)Session["BusinessEndsHour"];
+                //DayPilotCalendar1.Attributes.Add("cellDuration", "15");
+                DayPilotCalendar1.BusinessBeginsHour = (int)Session["BusinessBeginsHour"];
+                DayPilotCalendar1.BusinessEndsHour = (int)Session["BusinessEndsHour"];
                 DayPilotCalendar1.StartDate = (DateTime)Session["CalendarStartDate"];
                 Session["CalendarData"] = CalendarData.GetData(ddlLocation.SelectedValue, ddlConsultant.SelectedValue, DayPilotCalendar1.StartDate, DayPilotCalendar1.StartDate.AddDays(7));
                 table = (DataTable)Session["CalendarData"];
@@ -277,8 +284,8 @@ namespace Citas
                     ClientLocation loc = callTraxDb.ClientLocations.Where(l => l.ClientLocationId.ToString() == ddlLocation.SelectedValue).FirstOrDefault();
                     if(loc != null)
                     {
-                        Session["BusinessBeginsHour"] = loc.BusinessBeginsHour;
-                        Session["BusinessEndsHour"] = loc.BusinessEndsHour;
+                        Session["BusinessBeginsHour"] = (int)loc.BusinessBeginsHour;
+                        Session["BusinessEndsHour"] = (int)loc.BusinessEndsHour;
                     }
                 }
             }
